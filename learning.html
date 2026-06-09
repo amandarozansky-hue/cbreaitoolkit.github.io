@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Learn AI fundamentals, prompt engineering, and real estate use cases. Structured learning for CBRE professionals." />
+  <title>Learning Hub — AI Toolkit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+  :root {
+    --accent:        #1a7a5e;
+    --accent-mid:    #22a07a;
+    --accent-light:  #d6ede7;
+    --accent-xlight: #f0faf6;
+    --ink:           #0f1117;
+    --ink-80:        #2d3139;
+    --ink-60:        #5a6272;
+    --ink-40:        #8a939f;
+    --ink-20:        #c4cad3;
+    --ink-10:        #e8ecf0;
+    --ink-05:        #f4f6f8;
+    --white:         #ffffff;
+    --blue:          #1d5fa8;
+    --blue-light:    #e8f0fb;
+    --purple:        #5b35b5;
+    --purple-light:  #ede8fb;
+    --amber:         #b45309;
+    --amber-light:   #fef3c7;
+    --r-xs:  4px;
+    --r-sm:  8px;
+    --r:    12px;
+    --r-lg: 20px;
+    --r-xl: 28px;
+    --shadow-xs: 0 1px 2px rgba(0,0,0,.04);
+    --shadow-sm: 0 2px 8px rgba(0,0,0,.06);
+    --shadow:    0 4px 20px rgba(0,0,0,.08);
+    --shadow-lg: 0 12px 40px rgba(0,0,0,.12);
+    --shadow-xl: 0 24px 64px rgba(0,0,0,.16);
+    --ease:     cubic-bezier(.25,.46,.45,.94);
+    --ease-out: cubic-bezier(0,.55,.45,1);
+    --dur:      200ms;
+    --dur-lg:   350ms;
+  }
+
+  *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+  html { scroll-behavior:smooth; -webkit-font-smoothing:antialiased; }
+  img,svg { display:block; }
+  button,input { font:inherit; }
+  a { color:inherit; text-decoration:none; }
+
+  body {
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    background:var(--white);
+    color:var(--ink);
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+
+  .container { width:100%; max-width:1120px; margin:0 auto; padding:0 2rem; }
+  .section-gap { padding:7rem 0; }
+  .section-gap-sm { padding:4rem 0; }
+
+  .reveal {
+    opacity:0; transform:translateY(24px);
+    transition:opacity var(--dur-lg) var(--ease), transform var(--dur-lg) var(--ease);
+  }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+
+  /* ── NAV ────────────────────────────────────────────────────────── */
+  .nav {
+    position:fixed; top:0; left:0; right:0; z-index:500;
+    height:60px; display:flex; align-items:center;
+    justify-content:space-between; padding:0 2rem;
+    background:rgba(255,255,255,.82);
+    -webkit-backdrop-filter:saturate(180%) blur(20px);
+    backdrop-filter:saturate(180%) blur(20px);
+    border-bottom:1px solid rgba(0,0,0,.06);
+    transition:box-shadow var(--dur) var(--ease);
+  }
+  .nav.scrolled { box-shadow:var(--shadow-sm); }
+  .nav-logo {
+    display:flex; align-items:center; gap:.5rem;
+    font-size:.95rem; font-weight:800; letter-spacing:-.02em; color:var(--ink);
+  }
+  .nav-logo-mark {
+    width:30px; height:30px; background:var(--ink); border-radius:8px;
+    display:grid; place-items:center; flex-shrink:0;
+  }
+  .nav-logo-mark svg { width:16px; height:16px; }
+  .nav-links { display:flex; align-items:center; gap:.25rem; list-style:none; }
+  .nav-links a {
+    font-size:.85rem; font-weight:500; color:var(--ink-60);
+    padding:.4rem .75rem; border-radius:var(--r-sm);
+    transition:color var(--dur) var(--ease), background var(--dur) var(--ease);
+  }
+  .nav-links a:hover { color:var(--ink); background:var(--ink-05); }
+  .nav-links a.active { color:var(--ink); font-weight:600; }
+  .nav-cta-btn {
+    display:inline-flex; align-items:center; gap:.4rem;
+    padding:.45rem 1rem; background:var(--ink); color:var(--white) !important;
+    border-radius:var(--r-sm); font-size:.85rem; font-weight:600;
+    transition:background var(--dur) var(--ease), transform var(--dur) var(--ease) !important;
+  }
+  .nav-cta-btn:hover { background:var(--ink-80) !important; transform:translateY(-1px); }
+  .nav-mobile-toggle {
+    display:none; background:none; border:none; cursor:pointer;
+    padding:.4rem; border-radius:var(--r-sm); color:var(--ink);
+  }
+
+  /* ── SECTION HEADERS ────────────────────────────────────────────── */
+  .section-eyebrow {
+    font-size:.7rem; font-weight:700; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--accent); margin-bottom:.6rem;
+  }
+  .section-title {
+    font-size:clamp(1.75rem,3vw,2.4rem); font-weight:800;
+    letter-spacing:-.025em; line-height:1.2; color:var(--ink); margin-bottom:.75rem;
+  }
+  .section-sub { font-size:.975rem; color:var(--ink-60); max-width:500px; line-height:1.65; }
+  .section-hdr { margin-bottom:3rem; }
+  .section-hdr.centered { text-align:center; }
+  .section-hdr.centered .section-sub { margin:0 auto; }
+
+  /* ── BUTTONS ────────────────────────────────────────────────────── */
+  .btn {
+    display:inline-flex; align-items:center; gap:.5rem;
+    padding:.7rem 1.5rem; border-radius:var(--r);
+    font-size:.9rem; font-weight:600; border:none; cursor:pointer;
+    transition:all var(--dur) var(--ease); white-space:nowrap;
+  }
+  .btn svg { width:15px; height:15px; flex-shrink:0; }
+  .btn-dark { background:var(--ink); color:var(--white); box-shadow:0 2px 8px rgba(15,17,23,.2); }
+  .btn-dark:hover { background:var(--ink-80); transform:translateY(-1px); box-shadow:0 4px 16px rgba(15,17,23,.25); }
+  .btn-accent { background:var(--accent); color:var(--white); box-shadow:0 2px 8px rgba(26,122,94,.3); }
+  .btn-accent:hover { background:var(--accent-mid); transform:translateY(-1px); }
+  .btn-ghost { background:transparent; color:var(--ink-60); border:1.5px solid var(--ink-10); }
+  .btn-ghost:hover { background:var(--ink-05); color:var(--ink); border-color:var(--ink-20); }
+  .btn-white { background:var(--white); color:var(--ink); }
+  .btn-white:hover { background:var(--ink-05); transform:translateY(-1px); }
+  .btn-outline-white {
+    background:transparent; color:rgba(255,255,255,.7);
+    border:1.5px solid rgba(255,255,255,.2);
+  }
+  .btn-outline-white:hover { background:rgba(255,255,255,.08); color:var(--white); border-color:rgba(255,255,255,.35); }
+
+  /* ── HERO ───────────────────────────────────────────────────────── */
+  .hero {
+    padding:calc(60px + 5rem) 0 4rem;
+    background:var(--white); position:relative; overflow:hidden;
+  }
+  .hero::before {
+    content:''; position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(0,0,0,.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,0,0,.025) 1px, transparent 1px);
+    background-size:48px 48px;
+    mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+    pointer-events:none;
+  }
+  .hero::after {
+    content:''; position:absolute; top:-20%; left:50%;
+    transform:translateX(-50%); width:800px; height:500px;
+    background:radial-gradient(ellipse, rgba(26,122,94,.08) 0%, transparent 70%);
+    pointer-events:none;
+  }
+  .hero-inner { position:relative; z-index:1; text-align:center; max-width:720px; margin:0 auto; }
+  .hero-badge {
+    display:inline-flex; align-items:center; gap:.5rem;
+    padding:.3rem .9rem; border-radius:100px;
+    border:1px solid var(--ink-10); background:var(--white);
+    box-shadow:var(--shadow-xs); font-size:.75rem; font-weight:600;
+    color:var(--ink-60); letter-spacing:.04em; margin-bottom:2rem;
+  }
+  .hero-badge-dot {
+    width:6px; height:6px; border-radius:50%;
+    background:var(--accent-mid); animation:pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity:1; transform:scale(1); }
+    50%      { opacity:.6; transform:scale(1.3); }
+  }
+  .hero-title {
+    font-size:clamp(2.4rem,5vw,3.8rem); font-weight:800;
+    line-height:1.08; letter-spacing:-.035em; color:var(--ink); margin-bottom:1.25rem;
+  }
+  .hero-title em { font-style:normal; color:var(--accent); }
+  .hero-subtitle {
+    font-size:1.05rem; line-height:1.7; color:var(--ink-60);
+    max-width:500px; margin:0 auto 2.5rem;
+  }
+  .hero-actions {
+    display:flex; align-items:center; justify-content:center;
+    gap:.75rem; flex-wrap:wrap; margin-bottom:3.5rem;
+  }
+  .hero-stats {
+    display:flex; justify-content:center; gap:0;
+    border:1px solid var(--ink-10); border-radius:var(--r-lg);
+    background:var(--white); box-shadow:var(--shadow-sm);
+    overflow:hidden; max-width:580px; margin:0 auto;
+  }
+  .hero-stat {
+    flex:1; padding:1.25rem 1rem; text-align:center;
+    border-right:1px solid var(--ink-10);
+    transition:background var(--dur) var(--ease);
+  }
+  .hero-stat:last-child { border-right:none; }
+  .hero-stat:hover { background:var(--ink-05); }
+  .hero-stat-value { font-size:1.5rem; font-weight:800; letter-spacing:-.04em; color:var(--ink); line-height:1; margin-bottom:.25rem; }
+  .hero-stat-label { font-size:.63rem; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-40); }
+
+  /* ── LEARNING TRACKS ─────────────────────────────────────────────── */
+  #tracks { background:var(--ink-05); }
+  .tracks-grid {
+    display:grid; grid-template-columns:repeat(3,1fr);
+    gap:1px; background:var(--ink-10);
+    border:1.5px solid var(--ink-10); border-radius:var(--r-xl); overflow:hidden;
+  }
+  .track-card {
+    background:var(--white); padding:2rem;
+    transition:background var(--dur) var(--ease);
+    display:flex; flex-direction:column; gap:1.25rem;
+  }
+  .track-card:hover { background:var(--ink-05); }
+  .track-icon { width:44px; height:44px; border-radius:var(--r); display:grid; place-items:center; flex-shrink:0; }
+  .track-icon svg { width:20px; height:20px; }
+  .track-icon-green  { background:var(--accent-xlight); color:var(--accent); }
+  .track-icon-blue   { background:var(--blue-light);    color:var(--blue); }
+  .track-icon-purple { background:var(--purple-light);  color:var(--purple); }
+  .track-level { font-size:.65rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; margin-bottom:.2rem; }
+  .track-level-green  { color:var(--accent); }
+  .track-level-blue   { color:var(--blue); }
+  .track-level-purple { color:var(--purple); }
+  .track-title { font-size:1.05rem; font-weight:700; color:var(--ink); margin-bottom:.3rem; }
+  .track-desc { font-size:.85rem; color:var(--ink-60); line-height:1.6; }
+  .track-steps { list-style:none; display:flex; flex-direction:column; gap:.5rem; margin-top:auto; }
+  .track-step { display:flex; align-items:center; gap:.6rem; font-size:.82rem; color:var(--ink-60); }
+  .track-step-num {
+    width:20px; height:20px; border-radius:50%;
+    display:grid; place-items:center; flex-shrink:0;
+    font-size:.62rem; font-weight:800;
+  }
+  .track-step-num-green  { background:var(--accent-xlight); color:var(--accent); }
+  .track-step-num-blue   { background:var(--blue-light);    color:var(--blue); }
+  .track-step-num-purple { background:var(--purple-light);  color:var(--purple); }
+  .track-step a:hover { color:var(--ink); text-decoration:underline; }
+  .track-cta {
+    display:inline-flex; align-items:center; gap:.3rem;
+    font-size:.8rem; font-weight:600; color:var(--accent);
+    padding:.4rem 0; margin-top:.25rem;
+    transition:gap var(--dur) var(--ease);
+  }
+  .track-cta:hover { gap:.5rem; }
+  .track-cta svg { width:12px; height:12px; }
+
+  /* ── FUNDAMENTALS ────────────────────────────────────────────────── */
+  #fundamentals { background:var(--white); }
+  .fundamentals-grid { display:flex; flex-direction:column; gap:.75rem; }
+
+  .accordion { border:1.5px solid var(--ink-10); border-radius:var(--r-lg); overflow:hidden; transition:border-color var(--dur) var(--ease); }
+  .accordion.open { border-color:var(--accent-light); }
+  .accordion-trigger {
+    width:100%; display:flex; align-items:center; justify-content:space-between;
+    gap:1rem; padding:1.5rem 1.75rem;
+    background:var(--white); border:none; cursor:pointer; text-align:left;
+    transition:background var(--dur) var(--ease);
+  }
+  .accordion-trigger:hover { background:var(--ink-05); }
+  .accordion.open .accordion-trigger { background:var(--accent-xlight); }
+  .accordion-trigger-left { display:flex; align-items:center; gap:1rem; }
+  .accordion-icon {
+    width:40px; height:40px; border-radius:var(--r-sm);
+    display:grid; place-items:center; flex-shrink:0;
+    background:var(--ink-05); color:var(--ink-60);
+    transition:background var(--dur) var(--ease), color var(--dur) var(--ease);
+  }
+  .accordion.open .accordion-icon { background:var(--accent-light); color:var(--accent); }
+  .accordion-icon svg { width:18px; height:18px; }
+  .accordion-lesson { font-size:.7rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-40); margin-bottom:.15rem; }
+  .accordion.open .accordion-lesson { color:var(--accent); }
+  .accordion-title { font-size:1rem; font-weight:700; color:var(--ink); }
+  .accordion-chevron {
+    width:28px; height:28px; border-radius:50%;
+    border:1.5px solid var(--ink-10); background:var(--white);
+    display:grid; place-items:center; flex-shrink:0; color:var(--ink-40);
+    transition:transform var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  }
+  .accordion.open .accordion-chevron { transform:rotate(180deg); border-color:var(--accent-light); color:var(--accent); }
+  .accordion-chevron svg { width:14px; height:14px; }
+  .accordion-body { display:none; padding:0 1.75rem 1.75rem; background:var(--accent-xlight); }
+  .accordion.open .accordion-body { display:block; }
+  .accordion-content { font-size:.875rem; color:var(--ink-80); line-height:1.75; }
+  .accordion-content p { margin-bottom:1rem; }
+  .accordion-content p:last-child { margin-bottom:0; }
+  .accordion-content strong { color:var(--ink); }
+  .accordion-content ul { margin:.5rem 0 1rem 1.25rem; }
+  .accordion-content li { margin-bottom:.4rem; }
+
+  .fund-callout {
+    display:flex; align-items:flex-start; gap:.75rem;
+    background:var(--white); border-radius:var(--r);
+    border:1px solid var(--accent-light); padding:1rem 1.25rem; margin-top:1.25rem;
+  }
+  .fund-callout-icon { font-size:1.1rem; flex-shrink:0; margin-top:.05rem; }
+  .fund-callout-text { font-size:.82rem; color:var(--ink-60); line-height:1.6; }
+  .fund-callout-text strong { color:var(--ink); }
+
+  .tool-row { display:grid; grid-template-columns:repeat(3,1fr); gap:.75rem; margin-top:1rem; }
+  .tool-block { background:var(--white); border:1.5px solid var(--ink-10); border-radius:var(--r); padding:1rem; }
+  .tool-block-name { font-size:.85rem; font-weight:700; color:var(--ink); margin-bottom:.25rem; }
+  .tool-block-tag { display:inline-block; font-size:.65rem; font-weight:700; letter-spacing:.04em; padding:.1rem .4rem; border-radius:var(--r-xs); margin-bottom:.5rem; }
+  .tool-block-desc { font-size:.78rem; color:var(--ink-60); line-height:1.5; }
+
+  .warning-block {
+    display:flex; align-items:flex-start; gap:.75rem;
+    background:var(--amber-light); border-radius:var(--r);
+    border:1.5px solid #fde68a; padding:1rem 1.25rem; margin-top:1.25rem;
+  }
+  .warning-block-icon { font-size:1.1rem; flex-shrink:0; }
+  .warning-block-text { font-size:.82rem; color:var(--amber); line-height:1.6; }
+  .warning-block-text strong { color:#92400e; }
+
+  /* ── PROMPT ENGINEERING ──────────────────────────────────────────── */
+  #prompt-engineering { background:var(--ink-05); }
+
+  .rctf-grid {
+    display:grid; grid-template-columns:repeat(4,1fr);
+    gap:1px; background:var(--ink-10);
+    border:1.5px solid var(--ink-10); border-radius:var(--r-lg); overflow:hidden; margin-bottom:2.5rem;
+  }
+  .rctf-block { background:var(--white); padding:1.75rem 1.5rem; transition:background var(--dur) var(--ease); }
+  .rctf-block:hover { background:var(--ink-05); }
+  .rctf-letter { font-size:2.5rem; font-weight:800; letter-spacing:-.04em; line-height:1; margin-bottom:.5rem; }
+  .rctf-name { font-size:.85rem; font-weight:700; color:var(--ink); margin-bottom:.4rem; }
+  .rctf-desc { font-size:.8rem; color:var(--ink-60); line-height:1.55; margin-bottom:.75rem; }
+  .rctf-example { font-size:.75rem; color:var(--ink-60); background:var(--ink-05); border-radius:var(--r-sm); padding:.6rem .75rem; border-left:2px solid var(--ink-20); font-style:italic; line-height:1.55; }
+
+  .comparison-wrapper {
+    display:grid; grid-template-columns:1fr 1fr;
+    gap:1px; background:var(--ink-10);
+    border:1.5px solid var(--ink-10); border-radius:var(--r-lg); overflow:hidden; margin-bottom:2.5rem;
+  }
+  .comparison-col { background:var(--white); padding:1.75rem; }
+  .comparison-col-right { background:var(--accent-xlight); }
+  .comparison-label {
+    display:flex; align-items:center; gap:.5rem;
+    font-size:.7rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; margin-bottom:1rem;
+  }
+  .comparison-label-dot { width:8px; height:8px; border-radius:50%; }
+  .dot-red { background:#ef4444; }
+  .dot-green { background:var(--accent); }
+  .comparison-prompt {
+    font-family:'SF Mono','Fira Code','Menlo',monospace;
+    font-size:.8rem; color:var(--ink-80); line-height:1.75;
+    white-space:pre-wrap; word-break:break-word;
+  }
+  .comparison-verdict {
+    display:flex; align-items:center; gap:.5rem;
+    font-size:.78rem; font-weight:600; margin-top:1.25rem;
+    padding:.6rem .75rem; border-radius:var(--r-sm);
+  }
+  .comparison-verdict-bad  { background:#fef2f2; color:#dc2626; }
+  .comparison-verdict-good { background:var(--accent-light); color:var(--accent); }
+  .comparison-verdict svg  { width:13px; height:13px; flex-shrink:0; }
+
+  .mistakes-grid {
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(300px,1fr));
+    gap:1rem; margin-bottom:2.5rem;
+  }
+  .mistake-card {
+    background:var(--white); border:1.5px solid var(--ink-10);
+    border-radius:var(--r-lg); padding:1.5rem;
+    display:flex; gap:1rem;
+    transition:border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  }
+  .mistake-card:hover { border-color:var(--ink-20); box-shadow:var(--shadow-sm); }
+  .mistake-num {
+    width:32px; height:32px; border-radius:50%;
+    background:var(--amber-light); color:var(--amber);
+    font-size:.75rem; font-weight:800;
+    display:grid; place-items:center; flex-shrink:0;
+  }
+  .mistake-title { font-size:.9rem; font-weight:700; color:var(--ink); margin-bottom:.3rem; }
+  .mistake-body { font-size:.82rem; color:var(--ink-60); line-height:1.6; }
+  .mistake-fix {
+    font-size:.78rem; color:var(--accent); font-weight:600;
+    margin-top:.5rem; display:flex; align-items:center; gap:.3rem;
+  }
+  .mistake-fix svg { width:11px; height:11px; }
+
+  .iteration-steps {
+    display:grid; grid-template-columns:repeat(4,1fr);
+    gap:1px; background:var(--ink-10);
+    border:1.5px solid var(--ink-10); border-radius:var(--r-xl); overflow:hidden;
+  }
+  .iteration-step { background:var(--white); padding:1.5rem; transition:background var(--dur) var(--ease); }
+  .iteration-step:hover { background:var(--ink-05); }
+  .iteration-step-num {
+    font-size:.65rem; font-weight:800; letter-spacing:.09em; text-transform:uppercase;
+    color:var(--ink-20); display:flex; align-items:center; gap:.4rem; margin-bottom:1rem;
+  }
+  .iteration-step-num::after { content:''; flex:1; height:1px; background:var(--ink-10); }
+  .iteration-step-title { font-size:.9rem; font-weight:700; color:var(--ink); margin-bottom:.4rem; }
+  .iteration-step-body { font-size:.8rem; color:var(--ink-60); line-height:1.6; }
+
+  /* ── TUTORIALS ───────────────────────────────────────────────────── */
+  #tutorials { background:var(--white); }
+  .tutorials-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1.25rem; }
+  .tutorial-card {
+    background:var(--white); border:1.5px solid var(--ink-10);
+    border-radius:var(--r-xl); overflow:hidden;
+    display:flex; flex-direction:column;
+    transition:border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease), transform var(--dur) var(--ease);
+  }
+  .tutorial-card:hover { border-color:var(--ink-20); box-shadow:var(--shadow); transform:translateY(-2px); }
+  .tutorial-card-top {
+    padding:1.75rem 1.75rem 1.25rem;
+    display:flex; align-items:flex-start; justify-content:space-between; gap:1rem;
+  }
+  .tutorial-card-icon { width:44px; height:44px; border-radius:var(--r); display:grid; place-items:center; flex-shrink:0; }
+  .tutorial-card-icon svg { width:20px; height:20px; }
+  .tutorial-meta { display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; }
+  .tutorial-time {
+    display:inline-flex; align-items:center; gap:.3rem;
+    font-size:.7rem; font-weight:700; letter-spacing:.05em;
+    padding:.2rem .6rem; border-radius:100px;
+    background:var(--ink-05); color:var(--ink-60);
+  }
+  .tutorial-time svg { width:11px; height:11px; }
+  .tutorial-difficulty { font-size:.7rem; font-weight:700; letter-spacing:.05em; padding:.2rem .6rem; border-radius:100px; }
+  .diff-beginner     { background:var(--accent-xlight); color:var(--accent); }
+  .diff-intermediate { background:var(--blue-light);    color:var(--blue); }
+  .tutorial-card-body { padding:0 1.75rem 1.5rem; flex:1; }
+  .tutorial-card-title { font-size:1.05rem; font-weight:700; color:var(--ink); margin-bottom:.4rem; line-height:1.3; }
+  .tutorial-card-desc { font-size:.85rem; color:var(--ink-60); line-height:1.6; margin-bottom:1.25rem; }
+  .tutorial-steps-list { list-style:none; display:flex; flex-direction:column; gap:.5rem; }
+  .tutorial-step-item { display:flex; align-items:flex-start; gap:.75rem; font-size:.82rem; color:var(--ink-60); line-height:1.5; }
+  .tutorial-step-num {
+    width:20px; height:20px; border-radius:50%;
+    background:var(--ink-05); color:var(--ink-60);
+    font-size:.62rem; font-weight:800;
+    display:grid; place-items:center; flex-shrink:0; margin-top:.05rem;
+  }
+  .tutorial-card-footer {
+    padding:1rem 1.75rem; border-top:1px solid var(--ink-10);
+    display:flex; align-items:center; justify-content:space-between; gap:.75rem;
+  }
+  .tutorial-outcome { font-size:.78rem; color:var(--ink-60); display:flex; align-items:center; gap:.4rem; }
+  .tutorial-outcome svg { width:13px; height:13px; color:var(--accent); }
+
+  /* ── GLOSSARY ────────────────────────────────────────────────────── */
+  #glossary { background:var(--ink-05); }
+  .glossary-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:.75rem; }
+  .glossary-card {
+    background:var(--white); border:1.5px solid var(--ink-10);
+    border-radius:var(--r); padding:1.25rem 1.25rem 1rem;
+    transition:border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  }
+  .glossary-card:hover { border-color:var(--ink-20); box-shadow:var(--shadow-sm); }
+  .glossary-tag {
+    display:inline-block; font-size:.63rem; font-weight:700; letter-spacing:.05em;
+    text-transform:uppercase; padding:.15rem .45rem; border-radius:var(--r-xs); margin-bottom:.5rem;
+  }
+  .glossary-term { font-size:.9rem; font-weight:700; color:var(--ink); margin-bottom:.3rem; }
+  .glossary-def { font-size:.8rem; color:var(--ink-60); line-height:1.6; }
+
+  /* ── CTA BANNER ──────────────────────────────────────────────────── */
+  .cta-banner {
+    background:var(--ink); border-radius:var(--r-xl);
+    padding:3.5rem; text-align:center; position:relative; overflow:hidden;
+  }
+  .cta-banner::before {
+    content:''; position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+    background-size:40px 40px;
+  }
+  .cta-banner-inner { position:relative; z-index:1; }
+  .cta-banner h2 { font-size:clamp(1.5rem,3vw,2rem); font-weight:800; color:var(--white); margin-bottom:.75rem; letter-spacing:-.025em; }
+  .cta-banner p { font-size:.975rem; color:rgba(255,255,255,.55); margin-bottom:2rem; max-width:420px; margin-left:auto; margin-right:auto; line-height:1.65; }
+  .cta-banner-actions { display:flex; align-items:center; justify-content:center; gap:.75rem; flex-wrap:wrap; }
+
+  /* ── FOOTER ──────────────────────────────────────────────────────── */
+  footer { background:var(--ink); padding:3rem 0; }
+  .footer-inner { display:flex; align-items:center; justify-content:space-between; gap:1.5rem; flex-wrap:wrap; }
+  .footer-logo { display:flex; align-items:center; gap:.5rem; font-size:.9rem; font-weight:700; color:var(--white); }
+  .footer-logo-mark { width:28px; height:28px; background:rgba(255,255,255,.12); border-radius:7px; display:grid; place-items:center; }
+  .footer-logo-mark svg { width:14px; height:14px; }
+  .footer-note { font-size:.78rem; color:rgba(255,255,255,.3); }
+  .footer-note strong { color:rgba(255,255,255,.5); }
+
+  /* ── SCROLLBAR ───────────────────────────────────────────────────── */
+  ::-webkit-scrollbar { width:5px; height:5px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:var(--ink-10); border-radius:3px; }
+  ::-webkit-scrollbar-thumb:hover { background:var(--ink-20); }
+
+  /* ── RESPONSIVE ──────────────────────────────────────────────────── */
+  @media (max-width:900px) {
+    .tracks-grid      { grid-template-columns:1fr; }
+    .rctf-grid        { grid-template-columns:repeat(2,1fr); }
+    .tutorials-grid   { grid-template-columns:1fr; }
+    .iteration-steps  { grid-template-columns:repeat(2,1fr); }
+    .tool-row         { grid-template-columns:1fr; }
+  }
+  @media (max-width:700px) {
+    .nav-links        { display:none; }
+    .nav-mobile-toggle { display:grid; place-items:center; }
+    .comparison-wrapper { grid-template-columns:1fr; }
+    .hero-stats       { flex-direction:column; border-radius:var(--r); }
+    .hero-stat        { border-right:none; border-bottom:1px solid var(--ink-10); }
+    .hero-stat:last-child { border-bottom:none; }
+    .iteration-steps  { grid-template-columns:1fr; }
+    .cta-banner       { padding:2.5rem 1.5rem; }
+    .rctf-grid        { grid-template-columns:1fr; }
+    .footer-inner     { flex-direction:column; align-items:flex-start; }
+  }
+  @media (max-width:480px) {
+    .container  { padding:0 1.25rem; }
+    .hero       { padding:calc(60px + 3.5rem) 0 3rem; }
+    .section-gap { padding:4rem 0; }
+  }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAV ══════════════════════════════════════════════════════════ -->
+<nav class="nav" id="nav">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+      </svg>
+    </div>
+    AI Toolkit
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html#catalogue">Prompts</a></li>
+    <li><a href="learning.html" class="active">Learning Hub</a></li>
+    <li><a href="index.html#use-cases">Use Cases</a></li>
+    <li><a href="index.html#catalogue" class="nav-cta-btn">
+      Browse Prompts
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+    </a></li>
+  </ul>
+  <button class="nav-mobile-toggle" aria-label="Menu">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  </button>
+</nav>
+
+<!-- ═══ HERO ══════════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-badge">
+        <div class="hero-badge-dot"></div>
+        Learning Hub &nbsp;·&nbsp; Free resource
+      </div>
+      <h1 class="hero-title">
+        Build your<br><em>AI confidence</em>
+      </h1>
+      <p class="hero-subtitle">
+        From first prompt to expert practitioner. Structured learning for real estate professionals, built around what your colleagues actually need.
+      </p>
+      <div class="hero-actions">
+        <a href="#tracks" class="btn btn-dark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Start learning
+        </a>
+        <a href="index.html#catalogue" class="btn btn-ghost">
+          Browse prompt library
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-value">4</div>
+          <div class="hero-stat-label">Modules</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value">15+</div>
+          <div class="hero-stat-label">Lessons</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value">45 min</div>
+          <div class="hero-stat-label">To first win</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-value">0</div>
+          <div class="hero-stat-label">Tech knowledge needed</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ LEARNING TRACKS ═══════════════════════════════════════════════ -->
+<section id="tracks" class="section-gap">
+  <div class="container">
+    <div class="section-hdr reveal">
+      <div class="section-eyebrow">Learning Tracks</div>
+      <h2 class="section-title">Choose where you are right now</h2>
+      <p class="section-sub">Each track moves you to the next level. Start wherever fits — no prerequisites.</p>
+    </div>
+    <div class="tracks-grid reveal">
+
+      <div class="track-card">
+        <div class="track-icon track-icon-green">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div>
+          <div class="track-level track-level-green">Beginner</div>
+          <div class="track-title">Just Getting Started</div>
+          <div class="track-desc">Never used AI tools at work, or tried them once and weren't sure what to do with the result.</div>
+        </div>
+        <ol class="track-steps">
+          <li class="track-step"><span class="track-step-num track-step-num-green">1</span><a href="#fundamentals">What is generative AI?</a></li>
+          <li class="track-step"><span class="track-step-num track-step-num-green">2</span><a href="#fundamentals">Your AI tools at CBRE</a></li>
+          <li class="track-step"><span class="track-step-num track-step-num-green">3</span><a href="#tutorials">Tutorial: Your first prompt</a></li>
+          <li class="track-step"><span class="track-step-num track-step-num-green">4</span><a href="index.html#catalogue">Copy a prompt and try it today</a></li>
+        </ol>
+        <a href="#fundamentals" class="track-cta">Start here <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+      </div>
+
+      <div class="track-card">
+        <div class="track-icon track-icon-blue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+        </div>
+        <div>
+          <div class="track-level track-level-blue">Intermediate</div>
+          <div class="track-title">Building Skills</div>
+          <div class="track-desc">You use AI occasionally but outputs are inconsistent. You want more reliable, professional-quality results.</div>
+        </div>
+        <ol class="track-steps">
+          <li class="track-step"><span class="track-step-num track-step-num-blue">1</span><a href="#prompt-engineering">The RCTF framework</a></li>
+          <li class="track-step"><span class="track-step-num track-step-num-blue">2</span><a href="#prompt-engineering">5 common prompt mistakes</a></li>
+          <li class="track-step"><span class="track-step-num track-step-num-blue">3</span><a href="#tutorials">Tutorial: Customise a prompt</a></li>
+          <li class="track-step"><span class="track-step-num track-step-num-blue">4</span><a href="#tutorials">Tutorial: Write from scratch</a></li>
+        </ol>
+        <a href="#prompt-engineering" class="track-cta">Start here <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+      </div>
+
+      <div class="track-card">
+        <div class="track-icon track-icon-purple">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        </div>
+        <div>
+          <div class="track-level track-level-purple">Advanced</div>
+          <div class="track-title">Going Deeper</div>
+          <div class="track-desc">You use AI regularly and want repeatable workflows, faster output refinement, and consistent results.</div>
+        </div>
+        <ol class="track-steps">
+          <li class="track-step"><span class="track-step-num track-step-num-purple">1</span><a href="#prompt-engineering">Iteration techniques</a></li>
+          <li class="track-step"><span class="track-step-num track-step-num-purple">2</span><a href="#tutorials">Tutorial: Review AI output</a></li>
+          <li class="track-step"><span class="track-step-num track-step-num-purple">3</span><a href="#glossary">AI glossary &amp; terminology</a></li>
+          <li class="track-step"><span class="track-step-num track-step-num-purple">4</span><a href="index.html#catalogue">Explore the full prompt library</a></li>
+        </ol>
+        <a href="#prompt-engineering" class="track-cta">Start here <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ AI FUNDAMENTALS ═══════════════════════════════════════════════ -->
+<section id="fundamentals" class="section-gap">
+  <div class="container">
+    <div class="section-hdr reveal">
+      <div class="section-eyebrow">Module 1</div>
+      <h2 class="section-title">AI fundamentals</h2>
+      <p class="section-sub">Understand what you're actually working with — in plain language, no technical background required.</p>
+    </div>
+    <div class="fundamentals-grid reveal">
+
+      <!-- 1.1 -->
+      <div class="accordion open">
+        <button class="accordion-trigger" aria-expanded="true">
+          <div class="accordion-trigger-left">
+            <div class="accordion-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 1 7 7c0 2.5-1.3 4.7-3.3 6l-.7.5V17H9v-1.5l-.7-.5A7 7 0 0 1 12 2z"/></svg>
+            </div>
+            <div>
+              <div class="accordion-lesson">Lesson 1.1</div>
+              <div class="accordion-title">What is Generative AI?</div>
+            </div>
+          </div>
+          <div class="accordion-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-content">
+            <p><strong>Generative AI is software that creates new content</strong> — text, images, or code — by learning patterns from vast amounts of existing content. When you type into Microsoft Copilot or Claude, you're interacting with a Large Language Model (LLM).</p>
+            <p>An LLM has been trained on hundreds of billions of words from books, websites, and research papers. It learned the statistical patterns of language: which words follow which, how ideas connect, what a professional email sounds like versus a casual message.</p>
+            <p><strong>It does not "think" or "know" things the way a human does.</strong> It predicts the most useful next word given everything you've written. Done billions of times, this produces fluent, coherent text — often impressively useful.</p>
+            <div class="fund-callout">
+              <div class="fund-callout-icon">💡</div>
+              <div class="fund-callout-text"><strong>Key implication:</strong> Output quality depends almost entirely on input quality. A vague prompt produces a generic result. A specific, well-structured prompt produces something you can actually use.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1.2 -->
+      <div class="accordion">
+        <button class="accordion-trigger" aria-expanded="false">
+          <div class="accordion-trigger-left">
+            <div class="accordion-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+            </div>
+            <div>
+              <div class="accordion-lesson">Lesson 1.2</div>
+              <div class="accordion-title">Your AI Tools at CBRE</div>
+            </div>
+          </div>
+          <div class="accordion-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-content">
+            <p>CBRE has three main AI tools available. Each has a different strength — knowing which to reach for saves significant time.</p>
+            <div class="tool-row">
+              <div class="tool-block">
+                <div class="tool-block-name">Microsoft Copilot</div>
+                <span class="tool-block-tag" style="background:var(--blue-light);color:var(--blue)">Microsoft 365</span>
+                <div class="tool-block-desc">Integrated into Outlook, Word, Excel, Teams. Best for drafting emails, summarising documents, creating slide outlines, and analysing spreadsheets within your existing workflow.</div>
+              </div>
+              <div class="tool-block">
+                <div class="tool-block-name">Ellis AI</div>
+                <span class="tool-block-tag" style="background:var(--accent-xlight);color:var(--accent)">CBRE Platform</span>
+                <div class="tool-block-desc">CBRE's internal AI with access to proprietary data and market databases. Best for market analysis, comparable transactions, and research tasks that need CBRE-specific information.</div>
+              </div>
+              <div class="tool-block">
+                <div class="tool-block-name">Claude</div>
+                <span class="tool-block-tag" style="background:var(--amber-light);color:var(--amber)">General AI</span>
+                <div class="tool-block-desc">Excellent for long-form analysis, complex reasoning, and structured documents. Works best with detailed, well-structured prompts and produces especially nuanced output.</div>
+              </div>
+            </div>
+            <div class="fund-callout" style="margin-top:1rem">
+              <div class="fund-callout-icon">📌</div>
+              <div class="fund-callout-text"><strong>Rule of thumb:</strong> Use Copilot for speed within M365 apps. Use Ellis for anything needing CBRE data or market comparables. Use Claude for complex analysis or long documents.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1.3 -->
+      <div class="accordion">
+        <button class="accordion-trigger" aria-expanded="false">
+          <div class="accordion-trigger-left">
+            <div class="accordion-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div>
+              <div class="accordion-lesson">Lesson 1.3</div>
+              <div class="accordion-title">Understanding AI Limitations</div>
+            </div>
+          </div>
+          <div class="accordion-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-content">
+            <p>AI tools are powerful, but they have real limitations you must account for before using any output professionally.</p>
+            <ul>
+              <li><strong>Hallucinations:</strong> AI can confidently state incorrect facts — wrong statistics, fabricated sources, outdated figures. Always verify any specific data point before using it professionally.</li>
+              <li><strong>Knowledge cutoffs:</strong> Most models have a training cutoff date and don't know about recent transactions, market movements, or current events. Never rely on AI for live market data.</li>
+              <li><strong>No memory between sessions:</strong> Unless you're in a continued conversation, the AI starts fresh each time. It doesn't remember what you discussed yesterday.</li>
+              <li><strong>Context limits:</strong> AI tools can only process a certain amount of text at once. Very long documents may be truncated or partially misinterpreted.</li>
+              <li><strong>Plausible ≠ accurate:</strong> AI is trained to produce text that sounds correct. Fluency and factual accuracy are entirely independent — a beautifully written paragraph can contain serious errors.</li>
+            </ul>
+            <div class="fund-callout">
+              <div class="fund-callout-icon">✅</div>
+              <div class="fund-callout-text"><strong>The rule:</strong> AI output is a first draft, not a final product. Your professional judgement, industry knowledge, and fact-checking are always the last line of defence before anything goes to a client.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1.4 -->
+      <div class="accordion">
+        <button class="accordion-trigger" aria-expanded="false">
+          <div class="accordion-trigger-left">
+            <div class="accordion-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            </div>
+            <div>
+              <div class="accordion-lesson">Lesson 1.4</div>
+              <div class="accordion-title">AI Safety at Work</div>
+            </div>
+          </div>
+          <div class="accordion-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-content">
+            <p><strong>What you type into an AI tool may be stored, logged, or used for model improvement</strong> depending on the tool and your organisation's enterprise settings. Apply this simple rule:</p>
+            <p><strong>Never put into an AI tool anything you wouldn't be comfortable seeing on the front page of a newspaper.</strong></p>
+            <ul>
+              <li><strong>Do not input:</strong> client names or identifying details, deal values or transaction specifics, confidential financial data, personal data of individuals, proprietary CBRE strategy or pricing</li>
+              <li><strong>Safe to input:</strong> anonymised summaries, publicly listed property descriptions, your own draft text for review, general market questions, structural and formatting tasks</li>
+              <li><strong>Ellis AI</strong> is the safest tool for CBRE-specific data as it operates within CBRE's controlled environment</li>
+            </ul>
+            <div class="warning-block">
+              <div class="warning-block-icon">⚠️</div>
+              <div class="warning-block-text"><strong>GDPR reminder:</strong> Inputting personal data about clients, colleagues, or counterparties into external AI tools may constitute a data breach under GDPR. When in doubt, anonymise first — replace names with [Client A] and values with [£amount].</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROMPT ENGINEERING ════════════════════════════════════════════ -->
+<section id="prompt-engineering" class="section-gap">
+  <div class="container">
+    <div class="section-hdr reveal">
+      <div class="section-eyebrow">Module 2</div>
+      <h2 class="section-title">Prompt engineering</h2>
+      <p class="section-sub">The craft of giving AI clear enough instructions that it produces something useful on the first attempt.</p>
+    </div>
+
+    <div class="reveal" style="margin-bottom:1.25rem">
+      <p style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem">The Framework</p>
+      <h3 style="font-size:1.1rem;font-weight:700;color:var(--ink);margin-bottom:1.5rem">The 4-element RCTF structure</h3>
+    </div>
+    <div class="rctf-grid reveal">
+      <div class="rctf-block">
+        <div class="rctf-letter" style="color:var(--accent)">R</div>
+        <div class="rctf-name">Role</div>
+        <div class="rctf-desc">Tell the AI who it is and what expertise to draw on. This shapes vocabulary, depth, and perspective.</div>
+        <div class="rctf-example">"You are a senior commercial real estate advisor with 15 years' experience in logistics markets…"</div>
+      </div>
+      <div class="rctf-block">
+        <div class="rctf-letter" style="color:var(--blue)">C</div>
+        <div class="rctf-name">Context</div>
+        <div class="rctf-desc">Provide the background the AI needs. More relevant detail means less generic output.</div>
+        <div class="rctf-example">"I have just completed a site visit with a 500-person fintech firm relocating from Canary Wharf…"</div>
+      </div>
+      <div class="rctf-block">
+        <div class="rctf-letter" style="color:var(--purple)">T</div>
+        <div class="rctf-name">Task</div>
+        <div class="rctf-desc">State precisely what you want. One clear, specific task per prompt produces better results.</div>
+        <div class="rctf-example">"Write a follow-up email addressing their concern and proposing a second viewing with the landlord…"</div>
+      </div>
+      <div class="rctf-block">
+        <div class="rctf-letter" style="color:var(--amber)">F</div>
+        <div class="rctf-name">Format</div>
+        <div class="rctf-desc">Specify length, structure, tone, and constraints. Without this, AI defaults to a format that may not fit.</div>
+        <div class="rctf-example">"Under 150 words. Professional but warm. Subject line included. End with a clear call-to-action."</div>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin:0 0 1.25rem">
+      <p style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem">Example</p>
+      <h3 style="font-size:1.1rem;font-weight:700;color:var(--ink);margin-bottom:1.5rem">See the difference RCTF makes</h3>
+    </div>
+    <div class="comparison-wrapper reveal">
+      <div class="comparison-col">
+        <div class="comparison-label">
+          <div class="comparison-label-dot dot-red"></div>
+          <span style="color:#dc2626">Without RCTF</span>
+        </div>
+        <div class="comparison-prompt">Write an email about the property visit.</div>
+        <div class="comparison-verdict comparison-verdict-bad">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          Vague — AI has to guess audience, tone, purpose, and length
+        </div>
+      </div>
+      <div class="comparison-col comparison-col-right">
+        <div class="comparison-label">
+          <div class="comparison-label-dot dot-green"></div>
+          <span style="color:var(--accent)">With RCTF</span>
+        </div>
+        <div class="comparison-prompt">You are a senior leasing broker [ROLE]. I visited a 12,000 sqft Grade A office in EC2 yesterday with a fintech occupier who expressed strong interest but had concerns about the breakout space [CONTEXT]. Write a follow-up email addressing their concern, referencing the building's upcoming fit-out allowance, and proposing a second viewing with the landlord present [TASK]. Keep it under 150 words, warm-professional tone, clear subject line, end with a specific call-to-action [FORMAT].</div>
+        <div class="comparison-verdict comparison-verdict-good">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Specific — AI produces a usable draft on the first attempt
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin:0 0 1.25rem">
+      <p style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem">Common pitfalls</p>
+      <h3 style="font-size:1.1rem;font-weight:700;color:var(--ink);margin-bottom:1.5rem">5 mistakes that produce weak output</h3>
+    </div>
+    <div class="mistakes-grid reveal">
+      <div class="mistake-card">
+        <div class="mistake-num">1</div>
+        <div>
+          <div class="mistake-title">Being too vague</div>
+          <div class="mistake-body">"Write something about this deal" gives the AI nothing. It produces something that sounds right but fits nothing specific.</div>
+          <div class="mistake-fix"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Name the deal, client, and goal</div>
+        </div>
+      </div>
+      <div class="mistake-card">
+        <div class="mistake-num">2</div>
+        <div>
+          <div class="mistake-title">No format specified</div>
+          <div class="mistake-body">Without instructions, AI outputs a wall of text. If you needed bullet points, a table, or 100 words — say so explicitly.</div>
+          <div class="mistake-fix"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Always include length, structure, tone</div>
+        </div>
+      </div>
+      <div class="mistake-card">
+        <div class="mistake-num">3</div>
+        <div>
+          <div class="mistake-title">Forgetting the audience</div>
+          <div class="mistake-body">AI doesn't know if your output is for a FTSE CEO or a first-time buyer. It defaults to a middle-ground that fits no one perfectly.</div>
+          <div class="mistake-fix"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Specify who will read it and why</div>
+        </div>
+      </div>
+      <div class="mistake-card">
+        <div class="mistake-num">4</div>
+        <div>
+          <div class="mistake-title">Accepting the first output</div>
+          <div class="mistake-body">The first response is rarely the best one. AI improves dramatically when you iterate — refine and redirect in the same conversation.</div>
+          <div class="mistake-fix"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Always ask for at least one revision</div>
+        </div>
+      </div>
+      <div class="mistake-card">
+        <div class="mistake-num">5</div>
+        <div>
+          <div class="mistake-title">Pasting sensitive data</div>
+          <div class="mistake-body">Client names, transaction values, and personal data should never go into external AI tools. Anonymise before you paste.</div>
+          <div class="mistake-fix"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Use [Client A], [£amount], [Property]</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin:0 0 1.25rem">
+      <p style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem">Technique</p>
+      <h3 style="font-size:1.1rem;font-weight:700;color:var(--ink);margin-bottom:1.5rem">How to iterate your way to a better result</h3>
+    </div>
+    <div class="iteration-steps reveal">
+      <div class="iteration-step">
+        <div class="iteration-step-num">01</div>
+        <div class="iteration-step-title">Run your first prompt</div>
+        <div class="iteration-step-body">Use the RCTF framework. Don't aim for perfection — aim for a useful starting point. Even a rough output is faster to refine than writing from scratch.</div>
+      </div>
+      <div class="iteration-step">
+        <div class="iteration-step-num">02</div>
+        <div class="iteration-step-title">Identify what's off</div>
+        <div class="iteration-step-body">Is the tone wrong? Too long? Missing a key point? Focus on the single most important issue first. Changing everything at once makes it hard to know what worked.</div>
+      </div>
+      <div class="iteration-step">
+        <div class="iteration-step-num">03</div>
+        <div class="iteration-step-title">Give a targeted follow-up</div>
+        <div class="iteration-step-body">"Make it more formal." "Cut to 100 words." "Add a paragraph on the exit strategy." Stay in the same conversation — context carries over.</div>
+      </div>
+      <div class="iteration-step">
+        <div class="iteration-step-num">04</div>
+        <div class="iteration-step-title">Add your expertise</div>
+        <div class="iteration-step-body">Paste the best version into your document and layer in your on-the-ground knowledge, client relationships, and professional judgement. That final 20% is yours.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ TUTORIALS ═════════════════════════════════════════════════════ -->
+<section id="tutorials" class="section-gap">
+  <div class="container">
+    <div class="section-hdr reveal">
+      <div class="section-eyebrow">Module 3</div>
+      <h2 class="section-title">Learn by doing</h2>
+      <p class="section-sub">Step-by-step tutorials that take you from knowing to doing. Pick the one that fits your next 15 minutes.</p>
+    </div>
+    <div class="tutorials-grid reveal">
+
+      <!-- Tutorial 1 -->
+      <div class="tutorial-card">
+        <div class="tutorial-card-top">
+          <div class="tutorial-card-icon" style="background:var(--accent-xlight)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <div class="tutorial-meta">
+            <span class="tutorial-time"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>5 min</span>
+            <span class="tutorial-difficulty diff-beginner">Beginner</span>
+          </div>
+        </div>
+        <div class="tutorial-card-body">
+          <div class="tutorial-card-title">Your First Prompt</div>
+          <div class="tutorial-card-desc">Go from zero to a usable AI output in under five minutes using the prompt library. No prior experience needed.</div>
+          <ol class="tutorial-steps-list">
+            <li class="tutorial-step-item"><span class="tutorial-step-num">1</span>Go to the prompt library and find a task that matches something on your to-do list right now</li>
+            <li class="tutorial-step-item"><span class="tutorial-step-num">2</span>Click "Copy Prompt" — the full structured prompt is now in your clipboard</li>
+            <li class="tutorial-step-item"><span class="tutorial-step-num">3</span>Paste it into Copilot, Claude, or any AI tool. Fill in everything in [brackets] with your specific details</li>
+            <li class="tutorial-step-item"><span class="tutorial-step-num">4</span>Read the output. Add your own knowledge where the AI couldn't know. Send or use it.</li>
+          </ol>
+        </div>
+        <div class="tutorial-card-footer">
+          <div class="tutorial-outcome">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            A finished first draft
+          </div>
+          <a href="index.html#catalogue" class="btn btn-accent" style="padding:.45rem 1rem;font-size:.8rem">Browse prompts</a>
+        </div>
+      </div>
+
+      <!-- Tutorial 2 -->
+      <div class="tutorial-card">
+        <div class="tutorial-card-top">
+          <div class="tutorial-card-icon" style="background:var(--blue-light)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </div>
+          <div class="tutorial-meta">
+            <span class="tutorial-time"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>10 min</span>
+            <span class="tutorial-difficulty diff-beginner">Beginner</span>
+          </div>
+        </div>
+        <div class="tutorial-card-body">
+          <div class="tutorial-card-title">Customising a Toolkit Prompt</div>
+          <div class="tutorial-card-desc">Take any prompt from the library and reshape it for your exact client, situation, and output requirements.</div>
+          <ol class="tutorial-steps-list">
+            <li class="tutorial-step-item"><span class="tutorial-step-num">1</span>Copy a prompt and paste it into a text editor so you can see the full structure clearly</li>
+            <li class="tutorial-step-item"><span class="tutorial-step-num">2</span>Fill every [bracket] with your specific information — the more detail, the better the output</li>
+            <li class="tutorial-step-item"><span class="tutorial-step-num">3</span>Add a Format instruction at the end if one isn't there: length, tone, structure required</li>
+            <li class="tutorial-step-item"><span class="tutorial-step-num">4</span>Run it. If the output isn't right, use one targeted follow-up to refine — don't start over</li>
+          </ol>
+        </div>
+        <div class="tutorial-card-footer">
+          <div class="tutorial-outcome">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            A prompt tuned to your exact task
+          </div>
+          <a href="#prompt-engineering" class="btn btn-ghost" style="padding:.45rem 1rem;font-size:.8rem">RCTF guide</a>
+        </div>
+      </div>
+
+      <!-- Tutorial 3 -->
+      <div class="tutorial-card">
+        <div class="tutorial-card-top">
+          <div class="tutorial-card-icon" style="background:var(--purple-light)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </div>
+          <div class="tutorial-meta">
+            <span class="tutorial-time"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>15 min</span>
+            <span class="tutorial-difficulty diff-intermediate">Intermediate</span>
+          </div>
+        </div>
+        <div class="tutorial-card-body">
+          <div class="tutorial-card-title">Writing a Prompt from Scratch</div>
+          <div class="tutorial-card-desc">When the library doesn't have exactly what you need, build your own using the RCTF framework.</div>
+          <ol class="tutorial-steps-list">
+            <li class="tutorial-step-item"><span class="tutorial-step-num">1</span>Write the Role: who should the AI be, and what expertise should it draw on?</li>
+            <li class="tutorial-step-item"><span class="tutorial-step-num">2</span>Write the Context: what's the specific situation? Include property details, client background, relevant data</li>
+            <li class="tutorial-step-item"><span class="tutorial-step-num">3</span>Write the Task: one clear, specific instruction. One task per prompt produces better results</li>
+            <li class="tutorial-step-item"><span class="tutorial-step-num">4</span>Add Format: word count, structure (bullets/prose/table), tone, audience. Run, assess, iterate.</li>
+          </ol>
+        </div>
+        <div class="tutorial-card-footer">
+          <div class="tutorial-outcome">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            A reusable prompt you built yourself
+          </div>
+          <a href="#prompt-engineering" class="btn btn-ghost" style="padding:.45rem 1rem;font-size:.8rem">RCTF guide</a>
+        </div>
+      </div>
+
+      <!-- Tutorial 4 -->
+      <div class="tutorial-card">
+        <div class="tutorial-card-top">
+          <div class="tutorial-card-icon" style="background:var(--amber-light)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          </div>
+          <div class="tutorial-meta">
+            <span class="tutorial-time"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>10 min</span>
+            <span class="tutorial-difficulty diff-intermediate">Intermediate</span>
+          </div>
+        </div>
+        <div class="tutorial-card-body">
+          <div class="tutorial-card-title">Reviewing &amp; Improving AI Output</div>
+          <div class="tutorial-card-desc">The professional discipline of turning a good AI draft into something genuinely excellent and client-ready.</div>
+          <ol class="tutorial-steps-list">
+            <li class="tutorial-step-item"><span class="tutorial-step-num">1</span>Read the entire output before editing. Is the structure right? Is the overall tone right?</li>
+            <li class="tutorial-step-item"><span class="tutorial-step-num">2</span>Verify every specific fact: figures, names, dates, market data. Change or remove anything unconfirmed.</li>
+            <li class="tutorial-step-item"><span class="tutorial-step-num">3</span>Add your professional insight — the on-the-ground knowledge AI doesn't have. This is what makes it uniquely yours.</li>
+            <li class="tutorial-step-item"><span class="tutorial-step-num">4</span>Read it aloud. If you wouldn't say it, don't send it. Adjust until it sounds like you.</li>
+          </ol>
+        </div>
+        <div class="tutorial-card-footer">
+          <div class="tutorial-outcome">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            Client-ready output you're proud to send
+          </div>
+          <a href="#fundamentals" class="btn btn-ghost" style="padding:.45rem 1rem;font-size:.8rem">AI limitations</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ GLOSSARY ══════════════════════════════════════════════════════ -->
+<section id="glossary" class="section-gap">
+  <div class="container">
+    <div class="section-hdr reveal">
+      <div class="section-eyebrow">Module 4</div>
+      <h2 class="section-title">AI glossary</h2>
+      <p class="section-sub">The terms you'll encounter in AI tools, conversations, and documentation — defined without jargon.</p>
+    </div>
+    <div class="glossary-grid reveal">
+      <div class="glossary-card">
+        <span class="glossary-tag" style="background:var(--accent-xlight);color:var(--accent)">Core</span>
+        <div class="glossary-term">Generative AI</div>
+        <div class="glossary-def">AI that creates new content (text, images, code) rather than just classifying or predicting from existing data.</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-tag" style="background:var(--accent-xlight);color:var(--accent)">Core</span>
+        <div class="glossary-term">Large Language Model (LLM)</div>
+        <div class="glossary-def">The technology behind Copilot, Claude, and ChatGPT. Trained on vast amounts of text to predict and generate language.</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-tag" style="background:var(--accent-xlight);color:var(--accent)">Core</span>
+        <div class="glossary-term">Prompt</div>
+        <div class="glossary-def">The instruction or question you give an AI tool. The quality of your prompt is the primary driver of output quality.</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-tag" style="background:var(--amber-light);color:var(--amber)">Know This</span>
+        <div class="glossary-term">Hallucination</div>
+        <div class="glossary-def">When AI confidently states something incorrect. A structural risk of LLMs — not a bug. Always verify specific facts before using them professionally.</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-tag" style="background:var(--amber-light);color:var(--amber)">Know This</span>
+        <div class="glossary-term">Knowledge Cutoff</div>
+        <div class="glossary-def">The date after which an AI model has no training data. It genuinely doesn't know about events, deals, or market moves after this date.</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-tag" style="background:var(--blue-light);color:var(--blue)">Technical</span>
+        <div class="glossary-term">Context Window</div>
+        <div class="glossary-def">The maximum amount of text an AI can process at once — roughly its "working memory." Older content may be forgotten in very long sessions.</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-tag" style="background:var(--blue-light);color:var(--blue)">Technical</span>
+        <div class="glossary-term">Token</div>
+        <div class="glossary-def">The unit AI uses to measure text — roughly ¾ of a word. Models have limits on how many tokens they can process in one request.</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-tag" style="background:var(--blue-light);color:var(--blue)">Technical</span>
+        <div class="glossary-term">RAG</div>
+        <div class="glossary-def">Retrieval-Augmented Generation. An architecture where AI searches a document database before generating a response — how Ellis AI accesses CBRE data.</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-tag" style="background:var(--purple-light);color:var(--purple)">Technique</span>
+        <div class="glossary-term">Few-shot Prompting</div>
+        <div class="glossary-def">Including 2–3 examples of your desired output inside the prompt. Dramatically improves consistency and style matching.</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-tag" style="background:var(--purple-light);color:var(--purple)">Technique</span>
+        <div class="glossary-term">Chain-of-thought</div>
+        <div class="glossary-def">Adding "Think step by step" to your prompt, which makes AI reason through a problem before concluding. Improves accuracy on complex tasks.</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-tag" style="background:var(--purple-light);color:var(--purple)">Technique</span>
+        <div class="glossary-term">System Prompt</div>
+        <div class="glossary-def">Background instructions given to an AI before a conversation starts. Shapes its persona, constraints, and default behaviour throughout the session.</div>
+      </div>
+      <div class="glossary-card">
+        <span class="glossary-tag" style="background:var(--blue-light);color:var(--blue)">Technical</span>
+        <div class="glossary-term">Temperature</div>
+        <div class="glossary-def">A setting controlling how creative vs. predictable AI responses are. Higher = more varied output; lower = more focused. Most professional tools set this automatically.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA BANNER ════════════════════════════════════════════════════ -->
+<section class="section-gap-sm">
+  <div class="container">
+    <div class="cta-banner reveal">
+      <div class="cta-banner-inner">
+        <h2>Ready to put this into practice?</h2>
+        <p>Browse 25+ expert-crafted prompts for every department. Copy, customise, and use in under 60 seconds.</p>
+        <div class="cta-banner-actions">
+          <a href="index.html#catalogue" class="btn btn-white">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            Browse the prompt library
+          </a>
+          <a href="#tracks" class="btn btn-outline-white">Restart a learning track</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <div class="footer-logo-mark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" width="14" height="14">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+          </svg>
+        </div>
+        AI Toolkit
+      </div>
+      <p class="footer-note">
+        AI Toolkit · Built for real estate professionals ·
+        Copy, customise, and use in any AI tool
+      </p>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── NAV SCROLL ──────────────────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 10);
+}, { passive: true });
+
+// ── ACCORDION ───────────────────────────────────────────────────────
+document.querySelectorAll('.accordion-trigger').forEach(trigger => {
+  trigger.addEventListener('click', () => {
+    const accordion = trigger.closest('.accordion');
+    const isOpen = accordion.classList.contains('open');
+    document.querySelectorAll('.accordion').forEach(a => {
+      a.classList.remove('open');
+      a.querySelector('.accordion-trigger').setAttribute('aria-expanded', 'false');
+    });
+    if (!isOpen) {
+      accordion.classList.add('open');
+      trigger.setAttribute('aria-expanded', 'true');
+    }
+  });
+});
+
+// ── SCROLL REVEAL ────────────────────────────────────────────────────
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// ── SMOOTH SCROLL (same-page anchors only) ───────────────────────────
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+</script>
+</body>
+</html>
