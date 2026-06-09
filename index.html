@@ -2507,10 +2507,10 @@ const EXAMPLE_SEARCHES = [
 const POPULAR_IDS = [1, 7, 14, 21, 3, 5];
 
 function buildEmptyState() {
-  const searchTerm = state.search ? `"${state.search}"` : 'your filters';
+  const searchTerm = state.search ? `"${esc(state.search)}"` : 'your filters';
 
   const searchChips = EXAMPLE_SEARCHES.map(s => `
-    <button class="empty-search-chip" onclick="applyExampleSearch('${s.q}')">
+    <button class="empty-search-chip" data-action="search" data-q="${esc(s.q)}">
       ${ICONS.search} ${s.label}
     </button>`).join('');
 
@@ -2519,7 +2519,7 @@ function buildEmptyState() {
     if (!p) return '';
     const catName = CATEGORIES.find(c => c.id === p.category)?.name || '';
     return `
-      <button class="empty-popular-card" onclick="clearFiltersAndOpen(${p.id})">
+      <button class="empty-popular-card" data-action="open-prompt" data-id="${p.id}">
         <div class="empty-popular-icon">${ICONS[DEPT_ICONS['all']]}</div>
         <div>
           <div class="empty-popular-title">${p.title}</div>
@@ -2529,7 +2529,7 @@ function buildEmptyState() {
   }).join('');
 
   const deptBtns = DEPARTMENTS.filter(d => d.id !== 'all').map(d => `
-    <button class="empty-dept-btn" onclick="setDept('${d.id}')">
+    <button class="empty-dept-btn" data-action="dept" data-dept="${d.id}">
       ${ICONS[DEPT_ICONS[d.id]] || ''} ${d.name}
     </button>`).join('');
 
@@ -2540,7 +2540,7 @@ function buildEmptyState() {
         <h3>No prompts found for ${searchTerm}</h3>
         <p>Try one of these example searches to get started:</p>
         <div class="empty-state-searches">${searchChips}</div>
-        <button class="empty-clear-btn" onclick="clearFilters()">
+        <button class="empty-clear-btn" data-action="clear">
           ${ICONS.x} Clear all filters
         </button>
       </div>
@@ -2928,6 +2928,17 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('search-input').addEventListener('input', e => {
     state.search = e.target.value;
     renderGrid();
+  });
+
+  // Empty-state button delegation (chips, popular cards, dept buttons, clear)
+  document.getElementById('prompt-grid').addEventListener('click', e => {
+    const btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    const { action, q, id, dept } = btn.dataset;
+    if (action === 'search')       applyExampleSearch(q);
+    else if (action === 'open-prompt') clearFiltersAndOpen(parseInt(id, 10));
+    else if (action === 'dept')    setDept(dept);
+    else if (action === 'clear')   clearFilters();
   });
 
   // Modal close: backdrop click + ESC
