@@ -1382,6 +1382,98 @@ body {
 }
 
 /* ══════════════════════════════════════════════════════════════
+   PROMPT MODAL — unified 5-section design
+   ══════════════════════════════════════════════════════════════ */
+.modal.pm-modal {
+  max-width:700px;
+  display:flex;
+  flex-direction:column;
+  max-height:90vh;
+  overflow:hidden;
+}
+.pm-header { flex-shrink:0; }
+.pm-breadcrumb {
+  font-size:.65rem; font-weight:700; letter-spacing:.07em;
+  text-transform:uppercase; color:var(--ink-40); margin-bottom:.2rem;
+}
+.pm-meta-row { display:flex; align-items:center; flex-wrap:wrap; gap:.4rem; margin-top:.4rem; }
+
+.pm-body { overflow-y:auto; flex:1; }
+
+.pm-section { padding:1.5rem; }
+.pm-section + .pm-section {
+  border-top:1.5px solid var(--ink-10);
+  padding-top:1.5rem;
+}
+.pm-section-eyebrow {
+  display:flex; align-items:center; gap:.4rem;
+  font-size:.67rem; font-weight:700; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--ink-40); margin-bottom:.875rem;
+}
+.pm-section-eyebrow svg { width:12px; height:12px; }
+
+/* Overview */
+.pm-overview-text { font-size:.9rem; color:var(--ink-80); line-height:1.72; }
+
+/* How to Use */
+.pm-tips-list { display:flex; flex-direction:column; gap:.875rem; }
+.pm-tip-item {
+  display:flex; align-items:flex-start; gap:.75rem;
+  font-size:.875rem; color:var(--ink-80); line-height:1.65;
+}
+.pm-tip-num {
+  width:22px; height:22px; border-radius:50%;
+  background:var(--accent-xlight); color:var(--accent);
+  font-size:.65rem; font-weight:800;
+  display:grid; place-items:center; flex-shrink:0; margin-top:.1rem;
+}
+
+/* Why It Works */
+.pm-why-text { font-size:.875rem; color:var(--ink-80); line-height:1.72; }
+
+/* Related Resources */
+.pm-related-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:.6rem; }
+.pm-related-card {
+  background:var(--white); border:1.5px solid var(--ink-10);
+  border-radius:var(--r); padding:.875rem .9rem;
+  text-align:left; cursor:pointer;
+  display:flex; flex-direction:column; gap:.25rem;
+  transition:background var(--dur) var(--ease), border-color var(--dur) var(--ease),
+             box-shadow var(--dur) var(--ease);
+}
+.pm-related-card:hover { background:var(--ink-05); border-color:var(--ink-20); box-shadow:var(--shadow-xs); }
+.pm-related-title { font-size:.82rem; font-weight:700; color:var(--ink); line-height:1.35; }
+.pm-related-meta { font-size:.7rem; color:var(--ink-40); }
+.pm-related-arrow { font-size:.7rem; font-weight:700; color:var(--accent); margin-top:.1rem; }
+
+/* Contributor */
+.pm-contributor { display:flex; align-items:center; gap:.875rem; }
+.pm-avatar {
+  width:40px; height:40px; border-radius:50%;
+  display:grid; place-items:center;
+  font-size:.72rem; font-weight:800; flex-shrink:0; letter-spacing:.02em;
+}
+.pm-av-green  { background:var(--accent-xlight); color:var(--accent); }
+.pm-av-blue   { background:var(--blue-light);    color:var(--blue); }
+.pm-av-purple { background:var(--purple-light);  color:var(--purple); }
+.pm-av-amber  { background:var(--amber-light);   color:var(--amber); }
+.pm-av-ink    { background:var(--ink-05);        color:var(--ink-60); }
+.pm-contributor-name { font-size:.9rem; font-weight:700; color:var(--ink); margin-bottom:.1rem; }
+.pm-contributor-role { font-size:.78rem; color:var(--ink-60); }
+
+/* modal impact reuse — compact spacing in new modal */
+.pm-section .modal-impact { margin-top:1.1rem; margin-bottom:0; }
+
+/* prompt box in new modal — no bottom margin, copy btn below */
+.pm-prompt-wrap { margin-bottom:.875rem; }
+.pm-prompt-wrap .modal-prompt-box { margin-bottom:0; }
+
+@media (max-width:620px) {
+  .modal.pm-modal { max-height:96vh; }
+  .pm-related-grid { grid-template-columns:1fr 1fr; }
+}
+
+/* ══════════════════════════════════════════════════════════════
    USE CASES
    ══════════════════════════════════════════════════════════════ */
 #use-cases { background:var(--ink); }
@@ -2040,6 +2132,15 @@ const LABEL_TYPES = {
   'under-5': { text: 'Under 5 mins', color: 'purple' },
 };
 
+const CONTRIBUTORS = {
+  'sarah-chen':      { initials:'SC', name:'Sarah Chen',       role:'Head of AI Enablement', dept:'Cross-functional',   av:'pm-av-green'  },
+  'james-whitfield': { initials:'JW', name:'James Whitfield',  role:'Senior Director',        dept:'Capital Markets',    av:'pm-av-blue'   },
+  'priya-mehta':     { initials:'PM', name:'Priya Mehta',      role:'Associate Director',     dept:'Research & Analytics', av:'pm-av-purple' },
+  'tom-bradley':     { initials:'TB', name:'Tom Bradley',      role:'Director',               dept:'Leasing & Brokerage',  av:'pm-av-amber'  },
+  'rachel-thompson': { initials:'RT', name:'Rachel Thompson',  role:'Director',               dept:'Property Management',  av:'pm-av-ink'    },
+  'marco-bianchi':   { initials:'MB', name:'Marco Bianchi',    role:'Senior Manager',         dept:'Corporate Solutions',  av:'pm-av-blue'   },
+};
+
 const PROMPTS = [
   // ─── GENERAL / TRANSVERSAL ───────────────────────────────────────────────
   {
@@ -2050,11 +2151,15 @@ const PROMPTS = [
     departments: ['all'],
     labels: ['frequently-used', 'high-impact', 'under-5'],
     prompt: `Write a concise executive summary (max 250 words) for the following document:\n\n[PASTE DOCUMENT HERE]\n\nStructure it as:\n• Situation: What is the context?\n• Key Findings: Top 3 data points or insights\n• Recommendation: Clear next step\n• Expected Outcome: Measurable result\n\nTone: Professional, direct, senior-leadership ready.`,
-    useCase: {
-      team: 'Retail Advisory',
-      task: 'Executive Summary',
-      result: 'Reduced drafting time by 30%',
-    },
+    useCase: { team: 'Retail Advisory', task: 'Executive Summary', result: 'Reduced drafting time by 30%' },
+    overview: 'Transforms any long-form document into a crisp, leadership-ready summary in under five minutes. Used across every department for deal memos, board updates, client briefings, and quarterly reports.',
+    howToUse: [
+      'Paste the full document into the brackets — the longer and messier the input, the more value this prompt adds.',
+      'Specify the intended reader. "Senior-leadership ready" is the default, but adjust tone for board packs vs. client-facing materials.',
+      'Review the Key Findings section carefully — AI selects what it considers the top 3, which may not match your strategic priorities. Override as needed.',
+    ],
+    whyItWorks: 'The Situation-Findings-Recommendation-Outcome structure mirrors how senior decision-makers process information: context first, then the crux, then the ask. Constraining to 250 words forces AI to prioritise rather than pad.',
+    contributor: 'sarah-chen',
   },
   {
     id: 2,
@@ -2065,6 +2170,14 @@ const PROMPTS = [
     labels: ['frequently-used', 'under-5'],
     prompt: `Draft a professional email based on the following context:\n\nPurpose: [e.g. follow-up after site visit / proposal submission / meeting request]\nRecipient: [Client name / Role]\nKey message: [What do you need to convey or ask?]\nTone: [Formal / Warm-professional / Urgent]\n\nKeep it under 150 words. Include a clear subject line. End with a specific call-to-action.`,
     useCase: null,
+    overview: 'Drafts professional emails for any situation — follow-ups, proposals, requests — in under 2 minutes. Works especially well for tricky correspondence where tone matters: chasing overdue responses, delivering difficult news, or re-engaging cold leads.',
+    howToUse: [
+      'Fill in all four fields: purpose, recipient, key message, and tone. Missing any one produces a generic draft.',
+      'For sensitive emails, add one line of context before running — "We last spoke at MIPIM" or "They pushed back on fee." More context equals better calibration.',
+      'Read the output aloud before sending. If a sentence sounds like it was written by a robot, rewrite it — you will feel it immediately.',
+    ],
+    whyItWorks: 'The 150-word constraint and mandatory call-to-action prevent the common AI failure mode of producing fluent-but-purposeless text. Specifying tone upfront produces emails that need minimal editing to sound like you.',
+    contributor: 'sarah-chen',
   },
   {
     id: 3,
@@ -2075,6 +2188,14 @@ const PROMPTS = [
     labels: ['frequently-used', 'under-5'],
     prompt: `Convert the following meeting notes into a structured summary:\n\n[PASTE NOTES HERE]\n\nOutput format:\n**Date & Attendees:**\n**Key Decisions Made:**\n**Action Items:** (Owner | Task | Deadline)\n**Open Questions:**\n\nBe concise. Do not invent information not present in the notes.`,
     useCase: null,
+    overview: 'Converts raw, stream-of-consciousness meeting notes into a structured summary with clear owners, tasks, and deadlines. Saves 10-15 minutes per meeting and ensures nothing falls through the cracks.',
+    howToUse: [
+      'The messier your input, the more this prompt shines. Paste notes verbatim — shorthand, typos, and fragments are all fine.',
+      'If notes do not include owners, add names in the raw input first so AI can assign them correctly.',
+      'The "do not invent information" instruction is critical — it prevents AI from filling gaps with plausible fiction. Never remove it.',
+    ],
+    whyItWorks: 'The fixed output schema (Decisions / Actions / Questions) creates a discipline that benefits the whole team. Everyone who reads the summary knows exactly where to look for their tasks. Explicitly blocking invention prevents confident-sounding but fabricated action items — the most common meeting-notes failure mode.',
+    contributor: 'tom-bradley',
   },
   {
     id: 4,
@@ -2085,6 +2206,14 @@ const PROMPTS = [
     labels: ['high-impact'],
     prompt: `I have the following dataset / metrics:\n\n[PASTE DATA OR TABLE]\n\nWrite a 3-paragraph narrative analysis that:\n1. Explains the trend in plain language\n2. Identifies 2-3 notable outliers or inflection points\n3. Suggests what this means for decision-making\n\nAvoid jargon. Write for a non-technical business audience.`,
     useCase: null,
+    overview: 'Turns a data table or metric dump into a readable 3-paragraph narrative suitable for non-technical stakeholders. Ideal for converting financial models, market data, or survey results into client-ready commentary.',
+    howToUse: [
+      'Paste the raw data as cleanly as possible — a formatted table is better than a wall of numbers.',
+      'Add one sentence of context about what the data represents. AI needs to know whether it is looking at vacancy rates or IRR figures.',
+      'The 3-paragraph structure is deliberate. If you need a different structure, modify the prompt before running it.',
+    ],
+    whyItWorks: 'Most data analysis prompts produce a bullet list. The 3-paragraph narrative format forces synthesis rather than summarisation — the difference between "vacancy rose 2%" and "vacancy rose 2%, breaking a 6-quarter compression trend, which signals further softening." The non-jargon instruction directly addresses the most common client complaint about analyst commentary.',
+    contributor: 'priya-mehta',
   },
   {
     id: 5,
@@ -2095,6 +2224,14 @@ const PROMPTS = [
     labels: ['frequently-used', 'high-impact'],
     prompt: `Create a slide-by-slide outline for a [X]-minute presentation on the following topic:\n\nTopic: [e.g. Q3 Market Outlook / Property Portfolio Review]\nAudience: [e.g. C-suite / Client / Internal team]\nGoal: [e.g. Secure approval / Inform / Persuade]\n\nFor each slide provide:\n- Slide title\n- 3 bullet points of content\n- Suggested visual (chart type, image, icon)\n\nKeep the narrative arc: Problem → Evidence → Solution → Call to action.`,
     useCase: null,
+    overview: 'Produces a complete slide-by-slide presentation structure in minutes, including visual suggestions for each slide. Used before building any major client deck, internal presentation, or pitch to align on structure before investing design time.',
+    howToUse: [
+      'The Problem → Evidence → Solution → CTA arc is built in. Work with it — it is what high-performing presentations use.',
+      'Be specific about audience. C-suite and internal team need completely different vocabulary, depth, and slide density.',
+      'Use the outline to get stakeholder alignment before building in PowerPoint. A 10-slide structure is far faster to iterate on than a fully designed deck.',
+    ],
+    whyItWorks: 'Specifying duration, audience, and goal produces presentations with narrative intent rather than information dumps. The visual suggestion per slide bridges the gap between content and design, preventing the common failure of text-heavy slides assembled after the fact.',
+    contributor: 'sarah-chen',
   },
   {
     id: 6,
@@ -2105,6 +2242,14 @@ const PROMPTS = [
     labels: ['high-impact'],
     prompt: `Perform a SWOT analysis for the following:\n\n[DESCRIBE THE ASSET / MARKET / STRATEGY]\n\nFor each quadrant (Strengths, Weaknesses, Opportunities, Threats) provide:\n- 4-5 specific, evidence-based points\n- One standout factor that deserves immediate attention\n\nConclude with a one-paragraph strategic recommendation.`,
     useCase: null,
+    overview: 'Generates a structured, evidence-based SWOT for any asset, market, or strategy. Useful as a thinking framework, a client deliverable, or an input to a wider strategic recommendation.',
+    howToUse: [
+      'The quality of your input description is everything here. A one-line input produces generic SWOTs; a paragraph with specifics produces strategic ones.',
+      'The "standout factor" instruction forces AI to prioritise rather than list. This is often the most useful part of the output.',
+      'The concluding recommendation is valuable but verify it — AI produces plausible recommendations based on logic, not on-the-ground market knowledge.',
+    ],
+    whyItWorks: 'Requiring 4-5 evidence-based points per quadrant forces completeness and specificity. The standout factor per quadrant gives the analysis a decision-making edge that standard SWOTs lack. The concluding recommendation ensures the exercise produces a point of view, not just a list of observations.',
+    contributor: 'priya-mehta',
   },
 
   // ─── CAPITAL MARKETS ─────────────────────────────────────────────────────
@@ -2116,26 +2261,21 @@ const PROMPTS = [
     departments: ['capital-markets'],
     labels: ['high-impact'],
     prompt: `Draft an investment memorandum for the following asset:\n\nAsset: [Property name, type, location]\nAsk Price: [Amount]\nKey Financials: [Cap rate, NOI, occupancy]\nInvestment Thesis: [Why is this compelling?]\n\nStructure:\n1. Executive Overview\n2. Market Context (local CRE dynamics)\n3. Asset Quality & Risk Factors\n4. Financial Summary\n5. Recommended Position\n\nWrite for a sophisticated institutional investor. Be factual; flag assumptions clearly.`,
-    useCase: {
-      team: 'Capital Markets',
-      task: 'Investment Memo',
-      result: 'Cut memo prep time from 4 hours to 45 minutes',
-    },
+    useCase: { team: 'Capital Markets', task: 'Investment Memo', result: 'Cut memo prep time from 4 hours to 45 minutes' },
     detail: {
       timeSaved: '45 min',
       timeSavedContext: 'Capital Markets advisors cut memo prep from ~4 hours to under 45 minutes using this as a starting framework.',
-      whenToUse: [
-        'After a site visit, when you need structured documentation before an investment committee meeting.',
-        'When a client or senior stakeholder requests a deal summary on short notice.',
-        'Preparing pitch materials for a new deal and need a professional first draft quickly.',
-        'When you want a consistent memo structure across your team\'s deal documentation.',
-      ],
-      tips: [
-        { title: 'Be specific in the brackets', body: 'The more detail you give — exact financials, tenant name, lease expiry — the less editing the output needs. Vague inputs produce generic memos.' },
-        { title: 'Treat the output as a first draft', body: 'Always verify every figure, yield, and market claim before sending. AI can generate plausible-sounding data it was never given.' },
-        { title: 'Add your market read after', body: 'The Market Context section benefits most from your own judgement. Layer in your on-the-ground insight after generation to make it uniquely yours.' },
-      ],
+      whenToUse: ['After a site visit, when you need structured documentation before an investment committee meeting.','When a client or senior stakeholder requests a deal summary on short notice.','Preparing pitch materials for a new deal and need a professional first draft quickly.','When you want a consistent memo structure across your team\'s deal documentation.'],
+      tips: [{ title: 'Be specific in the brackets', body: 'The more detail you give — exact financials, tenant name, lease expiry — the less editing the output needs. Vague inputs produce generic memos.' },{ title: 'Treat the output as a first draft', body: 'Always verify every figure, yield, and market claim before sending. AI can generate plausible-sounding data it was never given.' },{ title: 'Add your market read after', body: 'The Market Context section benefits most from your own judgement. Layer in your on-the-ground insight after generation to make it uniquely yours.' }],
     },
+    overview: 'Produces a structured investment memorandum for any commercial real estate asset — from first input to review-ready draft in under an hour. Used by Capital Markets advisors to scale deal documentation without sacrificing analytical quality.',
+    howToUse: [
+      'Be specific in every bracket — exact financials, tenant name, lease expiry, and investment thesis. Vague inputs produce generic memos.',
+      'Treat the output as a first draft. Always verify every figure, yield, and market claim before sending — AI can generate plausible-sounding data it was never given.',
+      'The Market Context section benefits most from your own judgement. Layer in your on-the-ground insight after generation to make it uniquely yours.',
+    ],
+    whyItWorks: 'The five-section structure mirrors actual investor decision-making: context, asset, numbers, risk, recommendation. Writing for "a sophisticated institutional investor" calibrates vocabulary and depth automatically. The "flag assumptions clearly" instruction is critical — it prevents the memo from presenting AI-generated figures as client-provided facts.',
+    contributor: 'james-whitfield',
   },
   {
     id: 8,
@@ -2146,6 +2286,14 @@ const PROMPTS = [
     labels: ['frequently-used', 'high-impact'],
     prompt: `Analyze the following comparable transactions and benchmark them against my subject property:\n\nSubject Property: [Describe]\nComps (paste table or list):\n[PASTE COMPS DATA]\n\nProvide:\n- Price per SF / Cap rate range\n- Market positioning of subject property (above / at / below market)\n- 3 adjustments to consider\n- Suggested pricing narrative for client discussion`,
     useCase: null,
+    overview: 'Benchmarks your subject property against comparable transactions and produces a pricing narrative and adjustment rationale. Used by Capital Markets and Valuation teams to substantiate pricing recommendations with structured evidence.',
+    howToUse: [
+      'Paste your comps as a table or structured list — the cleaner the formatting, the better the analysis.',
+      'Include at least 3 comps. With fewer, the benchmark range is too narrow to be commercially meaningful.',
+      'The pricing narrative at the end is the most client-ready output. Use it as the basis for your verbal recommendation in the first meeting.',
+    ],
+    whyItWorks: 'Structuring around market positioning (above/at/below market) forces a relative answer rather than an absolute one — which is how clients actually make pricing decisions. The 3-adjustments request surfaces the factors most likely to be challenged in client discussion, so you are ready for them.',
+    contributor: 'james-whitfield',
   },
   {
     id: 9,
@@ -2156,6 +2304,14 @@ const PROMPTS = [
     labels: ['frequently-used', 'under-5'],
     prompt: `I am presenting the following deal to investors:\n\n[Brief deal description]\n\nGenerate the 10 most likely tough questions investors will ask, covering:\n- Financial risk\n- Market conditions\n- Exit strategy\n- Competitive alternatives\n\nFor each question, provide a concise, confident answer (2-3 sentences). Flag any question where I should have backup data ready.`,
     useCase: null,
+    overview: 'Stress-tests your deal presentation by generating the 10 toughest investor questions — with model answers — before you are in the room. Particularly effective for preparing junior team members before IC meetings or high-stakes pitches.',
+    howToUse: [
+      'Be specific in the deal description. A generic input produces generic questions; specific financials produce the pointed questions that will actually come up.',
+      'Use the model answers as a starting point, not a script. Layer in your own market knowledge, especially on local dynamics the AI will not have.',
+      'Act immediately on the "backup data needed" flags. Gathering that data converts the exercise from preparation into preparation with a gaps checklist.',
+    ],
+    whyItWorks: 'The four-category structure (financial, market, exit, competition) covers the full attack surface an investor might probe. Requiring 2-3 sentence answers forces the brevity that holds up under fire. The "backup data" flag converts the exercise from a useful drill into a live readiness checklist.',
+    contributor: 'james-whitfield',
   },
 
   // ─── RETAIL ADVISORY ─────────────────────────────────────────────────────
@@ -2167,11 +2323,15 @@ const PROMPTS = [
     departments: ['retail-advisory'],
     labels: ['frequently-used', 'high-impact'],
     prompt: `Write a retail market snapshot for the following area:\n\nLocation: [City / Submarket]\nFocus: [High street / Shopping center / Mixed-use]\nData available: [PASTE any metrics, vacancy rates, footfall data]\n\nOutput:\n- Market headline (1 sentence)\n- Key trends (3 bullets)\n- Occupier demand signals\n- Risk factors\n- Outlook (6-12 month)\n\nWrite in a tone appropriate for a client-facing market report.`,
-    useCase: {
-      team: 'Retail Advisory',
-      task: 'Market Snapshot',
-      result: 'Reports delivered 2 days faster per quarter',
-    },
+    useCase: { team: 'Retail Advisory', task: 'Market Snapshot', result: 'Reports delivered 2 days faster per quarter' },
+    overview: 'Produces a client-ready retail market report section from raw data in 5-10 minutes. Used by Retail Advisory teams to scale quarterly market commentary without proportionally increasing drafting time.',
+    howToUse: [
+      'Paste any data you have — even partial metrics produce a useful output, though more data means more precise headline trends.',
+      'The Output format (headline → trends → demand → risk → outlook) is structured for client consumption. Maintain this order.',
+      'The 6-12 month outlook section is where AI most needs your local expertise. Edit it to reflect what you are actually hearing from occupiers and landlords on the ground.',
+    ],
+    whyItWorks: 'The market headline constraint (1 sentence) forces synthesis over description. Most snapshots start with context; starting with the headline makes clients read on. The structured output format also means reports are comparable quarter over quarter without manual reformatting.',
+    contributor: 'tom-bradley',
   },
   {
     id: 11,
@@ -2182,6 +2342,14 @@ const PROMPTS = [
     labels: ['high-impact'],
     prompt: `Assess the following site for a retail occupier:\n\nOccupier type: [e.g. Fast fashion / QSR / Luxury]\nSite: [Address, SF, configuration]\nCatchment data: [Population, footfall, competing anchors]\n\nProvide:\n- Fit score (High / Medium / Low) with rationale\n- Top 3 positive factors\n- Top 3 risks\n- Lease recommendation (rent range, key clauses to negotiate)`,
     useCase: null,
+    overview: 'Produces a structured site assessment for any retail occupier, covering fit, risk, and lease recommendation in a consistent format. Used by Retail Advisory teams to evaluate multiple locations efficiently and provide consistent advice across a shortlist.',
+    howToUse: [
+      'Specify the occupier type precisely — "fast fashion" produces very different advice from "luxury goods." The more specific, the more useful the fit assessment.',
+      'The catchment data is the most important input. If you only have one data point, include it — partial data is better than none.',
+      'The lease recommendation section (rent range + key clauses) is the most actionable output. Use it as the opening position for landlord negotiations.',
+    ],
+    whyItWorks: 'The High/Medium/Low fit score with rationale forces a recommendation rather than a neutral assessment — which is what clients pay for. Structuring as positive factors vs. risks surfaces the trade-offs clearly without requiring the client to weigh conflicting factors themselves.',
+    contributor: 'tom-bradley',
   },
   {
     id: 12,
@@ -2192,6 +2360,14 @@ const PROMPTS = [
     labels: ['high-impact'],
     prompt: `Develop a tenant mix strategy for the following retail asset:\n\nAsset: [Type, size, location]\nCurrent vacancy: [%]\nExisting anchors: [List]\nTarget customer: [Demographics]\n\nRecommend:\n- Ideal category breakdown (% by GLA)\n- 5-8 target tenants per category (realistic operators for this market)\n- 1 "experience" concept to drive footfall\n- Phasing priority (what to fill first and why)`,
     useCase: null,
+    overview: 'Develops a data-driven tenant mix strategy for any retail asset, including category breakdown, target tenant recommendations, and phasing priority. Used when advising owners on leasing direction or repositioning an underperforming asset.',
+    howToUse: [
+      'The existing anchors input is critical — AI needs to know what is already there to avoid recommending direct competitors or over-indexing a single category.',
+      'The prompt requests "realistic operators for this market" by default. Emphasise this when populating to prevent AI from suggesting tenants with no regional presence.',
+      'Use the phasing priority output to sequence your leasing outreach. Starting with the wrong category can close off better options later.',
+    ],
+    whyItWorks: 'Requiring % by GLA rather than category names forces an allocation decision that can be reviewed and challenged. The "experience concept" instruction responds to the structural shift in retail toward destination-led spaces — it is not optional decoration, it is the footfall driver that supports every other tenant.',
+    contributor: 'rachel-thompson',
   },
 
   // ─── PROPERTY MANAGEMENT ─────────────────────────────────────────────────
@@ -2204,6 +2380,14 @@ const PROMPTS = [
     labels: ['frequently-used', 'under-5'],
     prompt: `Draft a professional response to the following tenant maintenance request:\n\nRequest: [Describe the issue]\nStatus: [Received / Scheduled / In progress / Resolved]\nExpected resolution: [Date or timeframe]\n\nTone: Empathetic, clear, professional. Reassure the tenant, state the next step, and provide a contact for follow-up. Max 100 words.`,
     useCase: null,
+    overview: 'Drafts professional, empathetic tenant communications for maintenance requests in under 2 minutes. Used by Property Management teams to standardise response tone and reduce average response time across a managed portfolio.',
+    howToUse: [
+      'Always fill in the Status field — it is the most important piece of information for the tenant and directly shapes the tone of the response.',
+      'The 100-word constraint is intentional. Long maintenance responses read as corporate deflection; brevity signals confidence and competence.',
+      'For urgent issues (water ingress, HVAC failure), add "Tone: urgent and empathetic" — the default warm-professional may underplay the seriousness.',
+    ],
+    whyItWorks: 'Leading with empathy before explanation mirrors how the best property managers actually communicate. The "next step + contact" structure gives tenants agency — they know exactly what will happen and who to call. The strict word limit prevents responses from becoming a liability exercise dressed as communication.',
+    contributor: 'rachel-thompson',
   },
   {
     id: 14,
@@ -2213,11 +2397,15 @@ const PROMPTS = [
     departments: ['property-management'],
     labels: ['frequently-used', 'high-impact'],
     prompt: `Write a monthly property management report for the owner using the following data:\n\nProperty: [Name, type]\nPeriod: [Month/Year]\nOccupancy: [%]\nRent collected: [% and amount]\nMaintenance items: [List open and closed]\nIncidents: [Any notable events]\n\nFormat:\n- Performance Summary (3 bullets)\n- Financial Snapshot\n- Operations Update\n- Upcoming Actions\n\nTone: Transparent, factual, owner-focused.`,
-    useCase: {
-      team: 'Property Management',
-      task: 'Monthly Owner Report',
-      result: 'Standardized reporting across 40+ assets',
-    },
+    useCase: { team: 'Property Management', task: 'Monthly Owner Report', result: 'Standardized reporting across 40+ assets' },
+    overview: 'Produces a structured, owner-facing property management report from raw operational data. Used by Property Management teams to standardise reporting across their asset portfolio and eliminate inconsistency between managers.',
+    howToUse: [
+      'Populate all six data fields before running — missing fields produce gaps in the Financial Snapshot that require manual filling.',
+      'The "Transparent, factual, owner-focused" tone instruction matters. Do not soften it for difficult reporting periods — owners spot euphemism immediately.',
+      'Save a copy of the filled-in prompt per property. It becomes next month\'s template, cutting future prep time to under 5 minutes.',
+    ],
+    whyItWorks: 'The four-section structure (performance, financial, operations, upcoming) maps directly to owner priorities — they want to know if the asset is performing before anything else. Standardised format allows owners with multiple assets to compare reports at a glance, which is a trust-building differentiator.',
+    contributor: 'rachel-thompson',
   },
   {
     id: 15,
@@ -2228,6 +2416,14 @@ const PROMPTS = [
     labels: ['high-impact'],
     prompt: `Prepare a negotiation brief for the following lease renewal:\n\nTenant: [Name, sector]\nCurrent lease: [Expiry, rent, SF]\nMarket rent estimate: [Range]\nTenant payment history: [Good / Issues / Arrears]\nStrategic priority: [Retain / Negotiate increase / Let expire]\n\nOutput:\n- Our opening position\n- Minimum acceptable terms\n- 3 concessions we can offer\n- Likely tenant objections + rebuttals\n- Walk-away scenario`,
     useCase: null,
+    overview: 'Prepares a complete negotiation brief for any lease renewal, covering opening position, minimum terms, concessions, objections, and walk-away scenario. Used before entering renewal discussions to ensure the team goes in with a strategy, not just a number.',
+    howToUse: [
+      'The "Strategic priority" field (retain/negotiate/let expire) is the most important input — it fundamentally changes the content of every other section.',
+      'The "likely tenant objections + rebuttals" section is the highest-value output. Read it carefully and add any objections AI missed based on your relationship history.',
+      'Do not share the full brief with your counterpart. It contains your minimum acceptable terms and walk-away scenario — information that would change the negotiation entirely.',
+    ],
+    whyItWorks: 'The structure mirrors how experienced negotiators prepare: position, limit, concessions, counter-playbook. The walk-away scenario forces a decision before the heat of negotiation — preventing the common failure of accepting bad terms to avoid discomfort. Including objection-handling converts a static document into a live preparation tool.',
+    contributor: 'tom-bradley',
   },
 
   // ─── LEASING & BROKERAGE ─────────────────────────────────────────────────
@@ -2240,6 +2436,14 @@ const PROMPTS = [
     labels: ['frequently-used', 'under-5'],
     prompt: `Write a compelling property listing description for the following:\n\nProperty: [Address, type, SF]\nKey features: [Floor plate, amenities, spec, transport]\nTarget occupier: [Tech company / Law firm / etc.]\nAsking rent: [£/$/€ per SF]\n\nWrite two versions:\n1. Short (50 words) — for portals and social media\n2. Long (150 words) — for brochures and marketing packs\n\nHighlight unique selling points first. No filler phrases like "rare opportunity."`,
     useCase: null,
+    overview: 'Writes two versions of a property listing description — short for portals and long for brochures — simultaneously. Used by Leasing teams to produce consistent, compelling copy faster and free up time for revenue-generating activity.',
+    howToUse: [
+      'Specify the target occupier precisely. "Tech company" is less useful than "Series B fintech, 80-person team." The more specific, the more the description speaks to the right reader.',
+      'The "no filler phrases" instruction is built in. If the output still contains phrases like "excellent transport links," the property features input was too generic.',
+      'Run both versions. The 50-word version is often more useful than expected — it forces the AI to surface the single best selling point, which is the one to lead with in every format.',
+    ],
+    whyItWorks: 'Asking for two versions simultaneously produces a useful creative comparison without extra work. The instruction to highlight USPs first (not context, not credentials) mirrors how occupier search teams actually read listings before deciding whether to look further.',
+    contributor: 'tom-bradley',
   },
   {
     id: 17,
@@ -2250,6 +2454,14 @@ const PROMPTS = [
     labels: ['frequently-used', 'under-5'],
     prompt: `Convert the following client conversation notes into a structured requirements brief:\n\n[PASTE NOTES / TRANSCRIPT]\n\nOutput:\n- Occupier profile\n- Space requirements (SF range, configuration)\n- Location priorities (must-have vs. nice-to-have)\n- Budget / rent sensitivity\n- Key decision criteria\n- Timeline & process\n- Red flags or sensitivities to be aware of\n\nThis brief will be shared with the search team.`,
     useCase: null,
+    overview: 'Converts raw conversation notes or call transcripts into a structured requirements brief that can be shared with a search team immediately. Reduces the time between client meeting and active search from days to minutes.',
+    howToUse: [
+      'Paste the notes as-is — do not pre-clean them. Part of the value is AI identifying structured requirements from unstructured conversation.',
+      'The "Red flags or sensitivities" field at the end is often the most valuable for the search team. Review it carefully; AI may surface things from the notes you glossed over.',
+      'Review "Location priorities: must-have vs. nice-to-have" with the client before finalising. This is the most common source of wasted search effort.',
+    ],
+    whyItWorks: 'The seven-field structure captures the full scope of what a search team needs — and critically separates must-haves from preferences, which is where most brief-writing fails. The "will be shared with the search team" context instruction calibrates the language for an internal reader rather than the client.',
+    contributor: 'sarah-chen',
   },
   {
     id: 18,
@@ -2260,6 +2472,14 @@ const PROMPTS = [
     labels: ['frequently-used'],
     prompt: `Write a pipeline status update for the following deals:\n\n[PASTE DEAL LIST WITH STAGE INFO]\n\nFor each deal provide a one-line status update in this format:\n[Property] — [Stage] — [Next action] — [Probability %] — [Expected close]\n\nThen write a 3-bullet summary for leadership highlighting:\n- Deals most likely to close this quarter\n- Deals at risk\n- Any resource or decision needs`,
     useCase: null,
+    overview: 'Generates a formatted pipeline status update for any number of deals, plus a 3-bullet leadership summary. Used by Leasing and Capital Markets teams for weekly deal reviews, CRM updates, and management reporting.',
+    howToUse: [
+      'The one-line per deal format is fixed — do not change it. Consistency is the point; 10 deals can be reviewed in 90 seconds.',
+      'The leadership summary (3 bullets) is designed to stand alone. If a senior stakeholder only has 20 seconds, these bullets are your report.',
+      'Input deal data in a consistent format across all deals. Mixed formats produce inconsistent output quality.',
+    ],
+    whyItWorks: 'The standard line format (Property–Stage–Next Action–Probability–Close) captures everything a deal manager needs in one line, matching how pipeline reviews actually run. The separate leadership summary removes the need for managers to parse detail themselves — which is why most pipeline updates do not get read.',
+    contributor: 'james-whitfield',
   },
 
   // ─── VALUATION & ADVISORY ────────────────────────────────────────────────
@@ -2272,6 +2492,14 @@ const PROMPTS = [
     labels: ['high-impact'],
     prompt: `Summarise the valuation rationale for the following property:\n\nProperty: [Type, location, size]\nValuation: [Amount]\nMethod used: [Income / Comparable / Cost]\nKey assumptions: [Yield, ERV, vacancy, capex]\n\nWrite a 200-word rationale suitable for a valuation certificate or client letter. Cover:\n- Market context\n- Method justification\n- Key value drivers\n- Caveats and risk factors`,
     useCase: null,
+    overview: 'Produces a 200-word valuation rationale suitable for a valuation certificate or client letter in minutes. Used by Valuation teams to draft the narrative component of formal valuations consistently and at scale.',
+    howToUse: [
+      'All four key assumptions (yield, ERV, vacancy, capex) must be populated. Missing one produces a rationale with obvious gaps.',
+      'The "caveats and risk factors" section is where professional liability lives. Review this section most carefully and add any specific risks AI did not identify.',
+      'This prompt produces the narrative, not the numbers. Your valuation model and supporting comparables remain your professional responsibility.',
+    ],
+    whyItWorks: 'The four-section structure (context, method, drivers, caveats) follows RICS guidance on valuation report content, ensuring the output meets professional standards as a starting point. Writing to 200 words enforces appropriate concision for a formal certificate — the output can often be used with minimal revision.',
+    contributor: 'priya-mehta',
   },
   {
     id: 20,
@@ -2282,6 +2510,14 @@ const PROMPTS = [
     labels: ['high-impact'],
     prompt: `Analyse current market yields for the following sector and geography:\n\nSector: [Office / Industrial / Retail / Residential]\nGeography: [City / Region]\nAvailable data: [PASTE any benchmark data]\n\nProvide:\n- Current prime yield vs. secondary yield spread\n- Direction of travel (hardening / softening / stable)\n- Key drivers of yield movement\n- Comparable markets for context\n- Outlook narrative (100 words)`,
     useCase: null,
+    overview: 'Produces a structured yield analysis for any real estate sector and geography, including trend narrative and 100-word outlook. Used by Valuation and Capital Markets teams to support pricing discussions, client briefs, and internal investment views.',
+    howToUse: [
+      'Paste any benchmark data you have — even a single yield figure gives AI enough context to structure a comparative response around.',
+      'The prime vs. secondary yield spread section is often the most commercially useful. Add any spread data you have to get a more specific output.',
+      'The 100-word outlook is calibrated for client-facing materials. For internal use with stronger language, add: "Write for internal use; be direct about risks."',
+    ],
+    whyItWorks: 'Structuring around direction of travel (hardening/softening/stable) rather than current yield level produces analysis useful for investment decision-making, not just reporting. The comparable markets section prevents the analysis from treating a sector in geographic isolation — context is what makes yield conclusions actionable.',
+    contributor: 'priya-mehta',
   },
 
   // ─── RESEARCH & ANALYSIS ─────────────────────────────────────────────────
@@ -2293,11 +2529,15 @@ const PROMPTS = [
     departments: ['research'],
     labels: ['frequently-used', 'high-impact'],
     prompt: `Write a research report section on the following topic:\n\nTopic: [e.g. Logistics & Industrial Market — Q2 2025]\nGeography: [Region/City]\nKey data points I have: [PASTE DATA]\nAudience: [Investors / Occupiers / Internal]\n\nStructure:\n- Headline trend (1 powerful sentence)\n- Supply & demand dynamics\n- Rental/pricing movement\n- Leasing activity highlights\n- Outlook\n\n300-400 words. Data-led, minimal opinion unless clearly flagged as analysis.`,
-    useCase: {
-      team: 'Research',
-      task: 'Quarterly Market Report',
-      result: 'First draft ready in 20 minutes vs. 2 hours',
-    },
+    useCase: { team: 'Research', task: 'Quarterly Market Report', result: 'First draft ready in 20 minutes vs. 2 hours' },
+    overview: 'Produces a complete 300-400 word research report section from raw data in 20 minutes. Used by Research teams to scale quarterly market reports without proportionally increasing drafting time.',
+    howToUse: [
+      'The audience field (investors/occupiers/internal) significantly changes vocabulary and emphasis. Specify it precisely — investor reports need different language from occupier briefs.',
+      'Paste your data points as raw figures. Do not summarise them first — let AI do that work and check whether its interpretation matches yours.',
+      'The "flag opinion clearly" instruction is critical for research credibility. Review the output and add [Analysis:] labels to any interpretive statements that need attribution.',
+    ],
+    whyItWorks: 'The structure (headline → supply/demand → pricing → leasing → outlook) mirrors how institutional investors read market reports: they start with the headline, scan dynamics, and skip to the outlook. Leading with the headline trend rather than context produces reports that get read instead of filed.',
+    contributor: 'priya-mehta',
   },
   {
     id: 22,
@@ -2308,6 +2548,14 @@ const PROMPTS = [
     labels: ['high-impact'],
     prompt: `Compile a competitor intelligence brief based on the following sources:\n\n[PASTE news articles, press releases, or public data]\n\nOutput:\n- Summary of key competitor moves (3-5 bullets)\n- Strategic implications for our business\n- Market opportunities their activity opens up\n- Recommended response or monitoring actions\n\nFocus on what matters commercially, not just activity volume.`,
     useCase: null,
+    overview: 'Synthesises public competitive intelligence into a commercially focused brief in minutes. Used by Research teams and business development leaders to track competitor activity and identify strategic response opportunities.',
+    howToUse: [
+      'Paste news articles or press releases directly. The more source material, the more complete the intelligence. Three sources is the minimum for a useful brief.',
+      'The "strategic implications" section is the most valuable — it requires AI to interpret, not just summarise. Review it critically; implications may be correct but generic.',
+      'The "recommended response or monitoring actions" section is often underused. Take it seriously — it converts intelligence from a read-only document into an action list.',
+    ],
+    whyItWorks: 'The instruction "focus on what matters commercially, not just activity volume" directly addresses the most common intelligence brief failure: cataloguing activity without commercial interpretation. Asking for market opportunities their moves open up forces an offensive rather than purely defensive read of competitor actions.',
+    contributor: 'priya-mehta',
   },
 
   // ─── CORPORATE SOLUTIONS ─────────────────────────────────────────────────
@@ -2319,11 +2567,15 @@ const PROMPTS = [
     departments: ['corporate'],
     labels: ['high-impact'],
     prompt: `Summarize a workplace strategy recommendation for the following client:\n\nCompany: [Sector, headcount, current footprint]\nObjectives: [Cost reduction / Collaboration / Flexibility]\nData: [Occupancy data, employee survey results if available]\n\nRecommend:\n- Optimal space model (HQ + hub / fully flexible / etc.)\n- Target SF range and rationale\n- Key design principles\n- Implementation phasing\n- Expected outcomes (quantified where possible)`,
-    useCase: {
-      team: 'Corporate Solutions',
-      task: 'Workplace Strategy',
-      result: 'Proposal win rate improved; clients cited clarity of recommendation',
-    },
+    useCase: { team: 'Corporate Solutions', task: 'Workplace Strategy', result: 'Proposal win rate improved; clients cited clarity of recommendation' },
+    overview: 'Produces a structured workplace strategy recommendation covering space model, SF target, design principles, phasing, and quantified outcomes. Used by Corporate Solutions advisors to sharpen recommendations before client presentations.',
+    howToUse: [
+      'Occupancy data and employee survey results are the most valuable inputs. If you do not have both, note which is absent — AI will flag assumptions accordingly.',
+      'The "quantified where possible" instruction on outcomes is important. Push AI to express results numerically (e.g. "20% reduction in cost per seat") rather than qualitatively.',
+      'Use this as your recommendation structure, not the final client document. Layer in client relationship context and market benchmarks on top.',
+    ],
+    whyItWorks: 'The five-part recommendation structure (model + SF + design + phasing + outcomes) ensures the client can act on every section independently. Anchoring on the client\'s stated objectives rather than the service offering makes the recommendation visibly client-centric — which is why this prompt correlates with improved proposal win rates.',
+    contributor: 'marco-bianchi',
   },
   {
     id: 24,
@@ -2334,6 +2586,14 @@ const PROMPTS = [
     labels: ['high-impact'],
     prompt: `Analyse the following real estate portfolio for rationalisation opportunities:\n\n[PASTE portfolio list: location, SF, lease expiry, cost, utilisation %]\n\nIdentify:\n- Assets to exit (low utilisation + high cost or near expiry)\n- Assets to right-size\n- Assets to retain / invest in\n- Estimated savings from recommended changes\n\nPresent findings in a decision matrix format. Flag any dependencies (e.g. key talent locations, contractual constraints).`,
     useCase: null,
+    overview: 'Analyses a real estate portfolio and identifies rationalisation opportunities through a structured decision framework. Used by Corporate Solutions teams when advising occupiers on estate strategy, cost reduction, or post-merger consolidation.',
+    howToUse: [
+      'The input format (location, SF, lease expiry, cost, utilisation) must be consistent across all assets. Inconsistent data produces inconsistent analysis.',
+      'The "estimated savings" output is where clients focus — push AI to quantify wherever possible, and verify the methodology before quoting any figures externally.',
+      'The "dependencies and constraints" section often contains the most practically useful findings — they explain why the obvious rationalisation is not already done.',
+    ],
+    whyItWorks: 'The decision matrix format (exit/right-size/retain/invest) matches how real estate committees actually make portfolio decisions. Including dependencies and contractual constraints in the output prevents the common failure of a rationalisation plan that looks compelling on paper but cannot be executed due to break clause timing or talent location constraints.',
+    contributor: 'marco-bianchi',
   },
   {
     id: 25,
@@ -2344,6 +2604,14 @@ const PROMPTS = [
     labels: ['frequently-used'],
     prompt: `Write the introduction section for a client proposal:\n\nClient: [Company name, sector]\nOur service offering: [What we are proposing]\nClient's stated challenge: [What they told us]\nOur differentiator: [Why us over competitors]\n\n150 words max. Open with the client's challenge (not our credentials). Show we understand their world. End with a bridge sentence to the rest of the proposal.`,
     useCase: null,
+    overview: 'Writes the introduction section for any client proposal — opening with their challenge, not your credentials. Used across Corporate Solutions, Leasing, and Capital Markets when preparing competitive pitches that need to stand out from template-looking proposals.',
+    howToUse: [
+      'The "open with the client\'s challenge" instruction is the single most important element. Resist adjusting it — it is the structural reason this prompt produces stronger proposal outcomes.',
+      'The "our differentiator" field rewards honest self-reflection. Generic differentiators ("global platform and local expertise") produce generic introductions. Specific ones produce convincing ones.',
+      'The 150-word max is strict. If output exceeds it, ask AI to cut 30 words from the middle — the bridge sentence at the end must survive.',
+    ],
+    whyItWorks: 'Starting with the client\'s challenge flips the conventional proposal structure in a way that immediately signals empathy and commercial understanding. The bridge sentence to the rest of the proposal creates a narrative through-line that prevents proposals from reading as disconnected capability sections — which is the most common feedback on proposals that lose.',
+    contributor: 'marco-bianchi',
   },
 ];
 
@@ -2659,25 +2927,32 @@ function handleCardCopy(e, id) {
 function openModal(id) {
   const p = PROMPTS.find(x => x.id === id);
   if (!p) return;
-
   const overlay = document.getElementById('modal-overlay');
-
-  if (p.detail) {
-    overlay.innerHTML = buildDetailModal(p, id);
-  } else {
-    overlay.innerHTML = buildStandardModal(p, id);
-  }
-
+  overlay.innerHTML = buildPromptModal(p, id);
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
-
-  // re-attach backdrop-click listener after innerHTML replace
   overlay.onclick = e => { if (e.target === overlay) closeModal(); };
+  // related resource clicks inside modal
+  overlay.querySelectorAll('[data-open-id]').forEach(btn => {
+    btn.addEventListener('click', () => { closeModal(); openModal(parseInt(btn.dataset.openId, 10)); });
+  });
 }
 
-function buildStandardModal(p, id) {
-  const catName = CATEGORIES.find(c => c.id === p.category)?.name || '';
-  const labels  = p.labels.map(labelHTML).join('');
+function getRelatedPrompts(p, max) {
+  // same category first, then same dept, deduplicated, excluding self
+  const byCategory = PROMPTS.filter(x => x.id !== p.id && x.category === p.category);
+  const byDept     = PROMPTS.filter(x => x.id !== p.id && !byCategory.includes(x) &&
+    x.departments.some(d => p.departments.includes(d)));
+  return [...byCategory, ...byDept].slice(0, max);
+}
+
+function buildPromptModal(p, id) {
+  const catName  = CATEGORIES.find(c => c.id === p.category)?.name || '';
+  const dept     = DEPARTMENTS.find(d => p.departments.includes(d.id) && d.id !== 'all');
+  const labels   = p.labels.map(labelHTML).join('');
+  const contrib  = CONTRIBUTORS[p.contributor] || null;
+
+  // ── 1. Overview ──────────────────────────────────────────────────
   const impactBlock = p.useCase ? `
     <div class="modal-impact">
       <div class="modal-impact-header">${ICONS.star} Real-world impact</div>
@@ -2688,158 +2963,116 @@ function buildStandardModal(p, id) {
       </div>
     </div>` : '';
 
-  return `<div class="modal" role="dialog" aria-modal="true">
-    <div id="modal-content">
-      <div class="modal-top">
-        <div class="modal-top-left">
-          <div class="modal-title">${p.title}</div>
-          <div class="modal-top-meta">
-            <div class="modal-cat">${catName}</div>
-            ${toolBadge(p.tool)}
-          </div>
-        </div>
-        <button class="modal-close" onclick="closeModal()">${ICONS.x}</button>
+  // ── 2. How to Use ────────────────────────────────────────────────
+  const tips = (p.howToUse || []).map((tip, i) => `
+    <div class="pm-tip-item">
+      <div class="pm-tip-num">${i + 1}</div>
+      <div>${tip}</div>
+    </div>`).join('');
+
+  // ── 4. Related Resources ─────────────────────────────────────────
+  const related = getRelatedPrompts(p, 3);
+  const relatedCards = related.map(r => {
+    const rCat = CATEGORIES.find(c => c.id === r.category)?.name || '';
+    return `<button class="pm-related-card" data-open-id="${r.id}">
+      <div class="pm-related-title">${r.title}</div>
+      <div class="pm-related-meta">${rCat} &middot; ${TOOL_META[r.tool]?.label || ''}</div>
+      <div class="pm-related-arrow">Open &rsaquo;</div>
+    </button>`;
+  }).join('');
+
+  // ── 5. Contributor ───────────────────────────────────────────────
+  const contributorBlock = contrib ? `
+    <div class="pm-contributor">
+      <div class="pm-avatar ${contrib.av}">${contrib.initials}</div>
+      <div>
+        <div class="pm-contributor-name">${contrib.name}</div>
+        <div class="pm-contributor-role">${contrib.role} &middot; ${contrib.dept}</div>
       </div>
-      <div class="modal-body">
-        <div class="modal-labels">${labels}</div>
+    </div>` : '';
+
+  return `<div class="modal pm-modal" role="dialog" aria-modal="true">
+
+    <!-- Sticky header -->
+    <div class="modal-top pm-header">
+      <div class="modal-top-left">
+        <div class="pm-breadcrumb">${dept ? dept.name : 'General'} &rsaquo; ${catName}</div>
+        <div class="modal-title">${p.title}</div>
+        <div class="pm-meta-row">
+          ${toolBadge(p.tool)}
+          ${labels}
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">${ICONS.x}</button>
+    </div>
+
+    <!-- Scrollable body -->
+    <div class="pm-body">
+
+      <!-- 1. Overview -->
+      <div class="pm-section">
+        <div class="pm-section-eyebrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Overview
+        </div>
+        <p class="pm-overview-text">${p.overview || ''}</p>
         ${impactBlock}
-        <div class="modal-prompt-label">Prompt</div>
-        <div class="modal-prompt-box">${esc(p.prompt)}</div>
+      </div>
+
+      <!-- 2. The Prompt -->
+      <div class="pm-section">
+        <div class="pm-section-eyebrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          The Prompt
+        </div>
+        <div class="pm-prompt-wrap">
+          <div class="modal-prompt-box">${esc(p.prompt)}</div>
+        </div>
         <div class="modal-actions">
           <button class="modal-btn-copy" id="modal-copy-btn" onclick="handleModalCopy(${id})">
             ${ICONS.copy} Copy Prompt
           </button>
         </div>
       </div>
-    </div>
-  </div>`;
-}
 
-function buildDetailModal(p, id) {
-  const d       = p.detail;
-  const catName = CATEGORIES.find(c => c.id === p.category)?.name || '';
-  const dept    = DEPARTMENTS.find(dep => p.departments.includes(dep.id) && dep.id !== 'all');
-
-  const whenItems = d.whenToUse.map(w =>
-    `<li><div class="dm-when-dot"></div>${w}</li>`
-  ).join('');
-
-  const tipItems = d.tips.map((t, i) =>
-    `<div class="dm-tip">
-      <div class="dm-tip-num">${i + 1}</div>
-      <div><strong>${t.title}.</strong> ${t.body}</div>
-    </div>`
-  ).join('');
-
-  return `<div class="modal modal-detail" role="dialog" aria-modal="true">
-    <!-- sticky header -->
-    <div class="modal-top dm-top">
-      <div class="modal-top-left">
-        <div class="dm-breadcrumb">${dept ? dept.name : ''} &rsaquo; ${catName}</div>
-        <div class="modal-title">${p.title}</div>
-        <div class="modal-top-meta">
-          ${toolBadge(p.tool)}
-          <span class="dm-time-pill">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            Saves ~${d.timeSaved}
-          </span>
-          <span class="dm-sample-pill">Sample detail view</span>
+      <!-- 3. How to Use -->
+      <div class="pm-section">
+        <div class="pm-section-eyebrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 017 7c0 2.5-1.3 4.7-3.3 6l-.7.5V17H9v-1.5l-.7-.5A7 7 0 0112 2z"/></svg>
+          How to Use
         </div>
-      </div>
-      <button class="modal-close" onclick="closeModal()">${ICONS.x}</button>
-    </div>
-
-    <!-- two-column body -->
-    <div class="dm-grid">
-
-      <!-- LEFT -->
-      <div class="dm-col dm-col-left">
-
-        <div class="dm-section">
-          <div class="dm-section-label">${ICONS.copy} The Prompt</div>
-          <div class="dm-prompt-box">${esc(p.prompt)}</div>
-          <button class="modal-btn-copy dm-copy-btn" id="modal-copy-btn" onclick="handleModalCopy(${id})">
-            ${ICONS.copy} Copy Prompt
-          </button>
-        </div>
-
-        <div class="dm-section">
-          <div class="dm-section-label">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            When to use this
-          </div>
-          <ul class="dm-when-list">${whenItems}</ul>
-        </div>
-
-        <div class="dm-section">
-          <div class="dm-section-label">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 017 7c0 2.5-1.3 4.7-3.3 6l-.7.5V17H9v-1.5l-.7-.5A7 7 0 0112 2z"/></svg>
-            Tips for better results
-          </div>
-          <div class="dm-tips">${tipItems}</div>
-        </div>
-
+        <div class="pm-tips-list">${tips}</div>
       </div>
 
-      <!-- RIGHT -->
-      <div class="dm-col dm-col-right">
-
-        <div class="dm-time-block">
-          <div class="dm-time-value">${d.timeSaved}</div>
-          <div class="dm-time-text">${d.timeSavedContext}</div>
+      <!-- 4. Why It Works -->
+      <div class="pm-section">
+        <div class="pm-section-eyebrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Why It Works
         </div>
-
-        <div class="dm-output-card">
-          <div class="dm-output-header">
-            <span class="dm-output-title">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              Example Output
-            </span>
-            <span class="dm-output-badge">Illustrative only</span>
-          </div>
-          <div class="dm-output-body">
-            <div class="dm-doc-title">Investment Memorandum</div>
-            <div class="dm-doc-meta">Meridian Business Park, Unit 4A &middot; Manchester, UK &middot; Draft for review</div>
-            <div class="dm-kv-grid">
-              <div class="dm-kv"><div class="dm-kv-label">Asking Price</div><div class="dm-kv-value">£42.5m</div></div>
-              <div class="dm-kv"><div class="dm-kv-label">Net Initial Yield</div><div class="dm-kv-value">5.25%</div></div>
-              <div class="dm-kv"><div class="dm-kv-label">Occupancy</div><div class="dm-kv-value">100%</div></div>
-              <div class="dm-kv"><div class="dm-kv-label">NOI p.a.</div><div class="dm-kv-value">£2.23m</div></div>
-              <div class="dm-kv"><div class="dm-kv-label">Lease Expiry</div><div class="dm-kv-value">2031</div></div>
-              <div class="dm-kv"><div class="dm-kv-label">5-yr IRR</div><div class="dm-kv-value">8.4%</div></div>
-            </div>
-            <div class="dm-output-section">
-              <div class="dm-output-section-title">1. Executive Overview</div>
-              <p>Meridian Business Park presents a compelling core logistics acquisition with an institutional-grade tenant covenant and a net initial yield of 5.25% — 25 bps above comparable prime logistics assets in the region. The 7-year unexpired lease provides income security while the Manchester Airport Corridor location positions the asset for above-average rental growth.</p>
-            </div>
-            <div class="dm-output-section">
-              <div class="dm-output-section-title">2. Market Context</div>
-              <p>Greater Manchester logistics continues to outperform the UK average, driven by e-commerce demand and constrained Grade A supply. Corridor vacancy stands at 2.3%; rents have grown 12% over 24 months. Six transactions above £30m completed in the sub-market in H1 2025.</p>
-            </div>
-            <div class="dm-output-section">
-              <div class="dm-output-section-title">3. Asset Quality &amp; Risk Factors</div>
-              <p>Refurbished 2021 to EPC A. Roof solar generates c.£180k annual savings. <strong>Key risk:</strong> single-tenant concentration and lease event in 2031, mitigated by 15-year operational history and recent tenant capex.</p>
-            </div>
-            <div class="dm-output-section">
-              <div class="dm-output-section-title">4. Financial Summary</div>
-              <table class="dm-table">
-                <tr><td>Asking Price</td><td>£42,500,000</td></tr>
-                <tr><td>Net Initial Yield</td><td>5.25%</td></tr>
-                <tr><td>Reversionary Yield</td><td>5.75%</td></tr>
-                <tr><td>Annual NOI</td><td>£2,231,250</td></tr>
-                <tr><td>5-yr IRR (base case)</td><td>8.4%</td></tr>
-              </table>
-            </div>
-            <div class="dm-output-section">
-              <div class="dm-output-section-title">5. Recommended Position</div>
-              <p>Proceed to due diligence at asking price. Strong fit for a core/core-plus mandate. Recommend commissioning a re-letting feasibility study as part of DD to address the 2031 lease event.</p>
-              <p class="dm-assumption">Assumptions: 5-yr hold &middot; 10 bps yield compression &middot; 3% p.a. rental growth &middot; 5% exit costs.</p>
-            </div>
-            <div class="dm-disclaimer">⚠ AI-generated draft — verify all figures and market data before use.</div>
-          </div>
-        </div>
-
+        <p class="pm-why-text">${p.whyItWorks || ''}</p>
       </div>
+
+      <!-- 5. Related Resources -->
+      ${related.length ? `
+      <div class="pm-section">
+        <div class="pm-section-eyebrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+          Related Resources
+        </div>
+        <div class="pm-related-grid">${relatedCards}</div>
+      </div>` : ''}
+
+      <!-- 6. Contributor -->
+      ${contributorBlock ? `
+      <div class="pm-section">
+        <div class="pm-section-eyebrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Contributor
+        </div>
+        ${contributorBlock}
+      </div>` : ''}
+
     </div>
   </div>`;
 }
