@@ -545,11 +545,47 @@ body {
 
 .catalogue-header {
   display:flex;
-  align-items:flex-end;
+  align-items:center;
   justify-content:space-between;
   gap:1rem;
   margin-bottom:2.5rem;
   flex-wrap:wrap;
+}
+
+.catalogue-steps {
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+  background:var(--ink-05);
+  border:1.5px solid var(--ink-10);
+  border-radius:var(--r-lg);
+  padding:.6rem .9rem;
+}
+.catalogue-step {
+  display:flex;
+  align-items:center;
+  gap:.45rem;
+  font-size:.78rem;
+  font-weight:600;
+  color:var(--ink-60);
+  white-space:nowrap;
+}
+.catalogue-step-num {
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  background:var(--ink);
+  color:var(--white);
+  font-size:.6rem;
+  font-weight:800;
+  display:grid;
+  place-items:center;
+  flex-shrink:0;
+}
+.catalogue-step-arrow {
+  color:var(--ink-20);
+  display:flex;
+  align-items:center;
 }
 
 /* Department tabs */
@@ -1949,7 +1985,26 @@ footer {
         <div class="section-eyebrow">Prompt Catalogue</div>
         <h2 class="section-title" style="margin-bottom:0">Find the right prompt for any task</h2>
       </div>
-      <p class="t-body" style="max-width:300px; text-align:right;">Select your department · filter by category · copy and go.</p>
+      <div class="catalogue-steps">
+        <div class="catalogue-step">
+          <span class="catalogue-step-num">1</span>
+          <span>Select department</span>
+        </div>
+        <div class="catalogue-step-arrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="catalogue-step">
+          <span class="catalogue-step-num">2</span>
+          <span>Filter by category</span>
+        </div>
+        <div class="catalogue-step-arrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="catalogue-step">
+          <span class="catalogue-step-num">3</span>
+          <span>Copy &amp; use</span>
+        </div>
+      </div>
     </div>
 
     <!-- Department rail -->
